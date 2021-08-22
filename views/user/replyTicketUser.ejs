@@ -1,0 +1,113 @@
+<!-- this is reply to ticket form for isp -->
+
+<% include ../partials/header %>
+
+	<div class="container form-resize">
+	 	<h4 class="text-center pt-2 pb-1 robotoBold font-2em deep-gray"><%=ticket.package %></h4>
+		<h5 class="text-center pb-1 robotoBold mid-gray"><%= ticket.department %></h5>
+		<p class="text-center robotoLight light-gray">This ticket ID <%= ticket.ticketId %> has got 
+			<% if (replies.length==0){%> no replies 
+				<%} else if (replies.length==1) {%> 1 reply 
+			 	<%} else {%><%=replies.length %> replies <%}%>
+		</p>
+		
+	<!-- first part of this is showing ticket-info, reply history & second part is reply form if the ticket is not resolved, otherwise no reply option-->
+		<!-- first part -->
+		
+		<div class="mx-auto robotoBold mid-gray">
+			<p class="mb-0"><strong><%= ticket.title %></strong> (
+				<% if (ticket.solved) 
+					{%><span class="text-success-custom">solved</span>
+						<%} else {
+							%><span class="text-danger-custom">not solved</span>
+						<%}%>
+			)</p>
+
+		<p class="robotoLight light-gray"><%= ticket.description %></p>
+	
+		<!--<h4 class="text-center">Previous Replies</h4>-->
+	
+		<ul class="pl-0 ml-sm-5">
+			<!-- if there's any reply already -->
+			<%if (replies.length>0) { replies.forEach(function(reply){%>
+				<li class="mt-4">
+					<div class="media">
+						
+						<div class="get-first-letter first-letter mr-3" data-user="<%= reply.nameOfReplier %>"></div>
+						<div class="media-body">
+							<div class="mb-0 ticket-title"><strong><%= reply.nameOfReplier%></strong>
+								<%if (reply.status===1){ %><span class="ml-3 text-danger-custom">(issue is not clear)</span>
+								<%} else if (reply.status===2){%><span class="ml-3 text-success-custom">( solved)</span>
+							<%}%>
+							</div>
+							<div class="pb-2 ticket-desc"><%= reply.reply %></div>
+							<div class="pb-2 ticket-date font-small"><%= reply.replyDate %></div>
+						</div>
+					</div>
+				
+				</li>
+			<%})}%>
+			
+
+		</ul>
+		<!-- end of first part -->
+		<!-- second part -->
+
+			<%if (!ticket.solved){%> <!--show reply form if ticket is not solved yet -->
+				<form method="POST" action="/<%=currentUser%>/<%=ticket.ticketId%>/user/reply-ticket" class="container review" id="reply-form-user">
+				 	<fieldset>
+				 		<legend class="text-center">Reply Form</legend>
+
+						<div class="form-group">
+						    <label for="user-reply">Reply <span class="text-danger-custom">* </span></label>
+						    <textarea class="form-control" id="user-reply" name="userReply"rows="3" required></textarea>
+						</div>
+						<div class="dropdown">
+							<button class="btn dropdown-toggle" type="button" id="ticketStatusUser" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"style="margin:1em 0;">
+							    <span class="text-danger-custom">* </span> Set status 
+							</button>
+							<div class="dropdown-menu" aria-labelledby="ticketStatusUser">
+								<a class="dropdown-item select-status" href="javascript:void(0)">issue solved</a>
+								<a class="dropdown-item select-status" href="javascript:void(0)">issue is not clear</a>
+							</div>
+							<span class="text-danger-custom status-error"></span>
+							<input type="hidden" name="status" id="status" value="">
+						</div>
+
+						<br>
+						
+						<input type="submit" value="Submit" class="col-12 col-md-4 btn submit">  
+						<!--<input type="reset" value="Reset" class="col-12 col-md-4 btn reset">-->
+						
+						
+					</fieldset>
+				</form>
+			<%} else {%>
+			<div class="bg-success-custom text-white text-center p-2">This is resolved </div>
+			<%}%>
+		
+		
+	</div>
+ </div>
+ 
+<% include ../partials/footer %>
+<script type="text/javascript">
+	$(document).ready(function(){
+		
+		// clicked status is showed up in dropdown button
+		$('.select-status').click(function(e){
+			document.getElementById('status').value=$(this).text();
+			document.getElementById('ticketStatusUser').innerHTML=$(this).text();
+		})
+		// User must select status for successful submission
+		$('#reply-form-user').submit(function(e){
+			if(!document.getElementById('status').value){
+				$('.status-error').text(' Please select status ');
+				e.preventDefault();
+			}
+		})
+	})
+	
+										
+
+</script>

@@ -1,0 +1,74 @@
+<!-- this is edit package form-->
+
+<% include ../partials/header %>
+
+<form method="POST" action="/<%=nameOfIsp %>/ispProfile/edit?_method=PUT" class="container form-resize" autocomplete="off">
+	 	<fieldset class="p-2">
+	 		<legend class="text-center p-4"> Edit Profile </legend>
+	 		<!--when ISP launched -->
+	 		<div class="form-group mb-4">
+			    <label for="datepicker"> Established On </label>
+			    <input type="text" class="form-control" name="isp[establishedOn]" id="datepicker" value="<%= isp.establishedOn %>" >
+			</div>
+			<!--contact of ISP-->
+      		<div class="form-group mb-5">
+				<label for="phone"> Phone </label>
+				 <div class="input-icon position-relative">
+			    	<!--<span class="country-code position-absolute">+88 </span>-->
+			    	<!--upper one is omitted as it needs more css to create the look-->
+			    	<input type="text" value="+88" class="form-control" id="country-code" readonly>
+			    	<input type="text" class="form-control" name="isp[phone]" id="phone" value="<%=isp.phone%>"onkeypress="return isNumber(event)"
+			    	minlength="11" maxlength="11"placeholder="">
+      			</div>
+	      	</div>
+	      	<br/>
+	      	<!--Registration No.-->
+	      	<div class="form-group mb-4">
+				<label for="registrationNumber"> Registration No. </label>
+				<input type="text" class="form-control" name="isp[registrationNumber]" id="registrationNumber" value="<%= isp.registrationNumber %>" >
+	      	</div>
+	      	<!--short description-->
+	      	<div class="form-group mb-4">
+                <label for="about">About</label>
+                <textarea class="form-control" name="isp[about]" id="about" rows="3"data-value="<%=isp.about%>"></textarea>
+            </div>
+            <!--Office-->
+            <div class="form-group mb-4">
+                <label for="headOffice">Office</label>
+                <textarea class="form-control" name="isp[headOffice]" id="headOffice" rows="3"
+                    data-value="<%=isp.headOffice%>">
+                 </textarea>
+            </div>
+            <!--Messenger link-->
+            <div class="form-group mb-4">
+                <label for="messengerLink">Facebook Messenger link</label>
+                <input type="text" class="form-control"class="form-control" name="isp[messengerLink]" id="messengerLink" rows="3"
+                    value="<%= isp.messengerLink %>">
+                 
+            </div>
+            
+      		<input type="submit" id="isp-profile-edit" value="Submit" class="col-12 col-md-4 btn submit">  
+			
+	 	</fieldset>
+	</form>
+<!--general footer-->
+<% include ../partials/footer %>
+<!--general form validation like allow only number or pw & confirm-pw must be same etc-->
+<% include ../partials/validation/registration-form-validation %> 
+<script>
+
+$(function(){
+$('#headOffice').html($('#headOffice').data('value'));
+$('#about').html($('#about').data('value'));
+
+	// control border-color of #country-code when focus/focusout event triggered on #phone
+	$('#phone').focus(function(){
+		$('#country-code').css({'border': '2px solid #80bdff','border-right':'0'});
+	})
+	$('#phone').focusout(function(){
+		$('#country-code').css({'border-color': '#e6e6e6','border-right':'0'});
+	})
+})
+</script>
+
+

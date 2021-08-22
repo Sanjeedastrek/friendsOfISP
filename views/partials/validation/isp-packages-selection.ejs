@@ -1,0 +1,45 @@
+<script type="text/javascript">
+ 	$(document).ready(function(){
+ 		let showPackage= $('#show-package');
+ 		// while user clicks any isp, corresponding packages are displayed in next dropdown
+ 		$('.isp').click(function(){
+ 			var take1=$(this).text();
+ 			$('#selected-isp').text($(this).text()); //show selected ISP 
+			document.getElementById('hidden-isp-field').value=take1;
+			// showPackage.text("Choose Package");
+			let data = {},  //this is the object is passed from user input
+				url='<%=baseURL%>/current-isp-package',
+				output="";
+				data.isp=$('#selected-isp').text();		
+				$.ajax({
+					type: 'POST',
+					// data: JSON.stringify(data), we dont need to stringify
+					data: data,
+					url: url,	
+                	error: function() {
+			    	$('.error').text('Sorry an unexpected problem occured, please try again');
+				},					
+			    success: function(response) {
+                	console.log('success');
+                    console.log(response.length);
+                    if(response.length===0){ //if no data found
+                    		$(showPackage).html("").css({"opacity":"0"}); //hide a thin span
+                    	} else{
+                    		response.forEach(function(result){
+                    		output+= "<a class='dropdown-item package' href='javascript:void(0)'>"+ result +"</a>";//package
+							})
+	                    	$(showPackage).html(output).css({"opacity":"1"});
+
+	                    }
+	                $('.package').click(function(){
+	                    let take2=$(this).text();
+				 		$('#selected-package').text($(this).text());
+				 		document.getElementById('hidden-package-field').value=take2;
+				 	});
+
+                }
+            })	
+ 		})
+ 	});
+</script>
+

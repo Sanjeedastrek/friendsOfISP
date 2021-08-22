@@ -1,0 +1,215 @@
+<!--router.get('/:nameOfIsp', middlewares.checkIspLoginStatus, packageController.showPackage)-->
+<!-- all available packages will be displayed as well as action buttons. When isp logs in, this page appears  -->
+<% include ../partials/header %>
+
+
+<div class="container-fluid">
+<input type='hidden' class='packageCreated' value='<%=packageCreated%>'>	
+	<div class="left-sidebar col-12 col-md-3 mx-auto pt-4 text-center float-left">
+		<%if (isp.logo) {%>
+	    	<img src="/img/uploads<%=isp.logo %>" class="img-fluid mx-auto d-block isp-logo my-4" alt="logo">
+	    	<% } else { %>
+	    	<img src="/img/incomplete.png" class="img-fluid mx-auto d-block isp-logo " alt="no logo exists">
+	    	<% } %>
+        <h4 class="p-2"><%= nameOfIsp %></h4>
+        <hr>
+        <div id="isp-panel" class="list-group">
+          <a class="scroll-spy list-group-item list-group-item-action" href="#package">Package</a>
+          <a class="scroll-spy list-group-item list-group-item-action" href="#location">Location</a>
+          <a class="scroll-spy list-group-item list-group-item-action" href="#about-isp">Profile</a>
+        </div>
+	</div>
+  
+	<div class="content col-12 col-md-8 m-2 float-left"style="min-height:800px">
+		<div data-spy="scroll" data-target="#isp-panel" data-offset="0" class="" style="min-height:800px">
+		<div id="package">
+			<h4 class="text-center m-4"><strong>All Packages</strong></h4> 
+			<h6 class="text-center">Total <%= packageList.length %> packages</h6>
+			<div class="row m-4">
+				<!--router.get('/:nameOfIsp/createPackage', middlewares.checkIspLoginStatus, packageController.createPackage)-->
+			    <a href="/<%= nameOfIsp %>/createPackage" role="button" class="col-12 col-md-4 btn action text-white"><i class="fas fa-edit"></i>Create New Package</a>   
+			</div>
+		
+		
+    		<div class="row alternate-list m-4">
+    			<!-- retrieve individual package -->
+    			<% packageList.forEach(function(package){ %>
+    				<div class="package-list col-12 col-md-4 text-center p-2">
+    					<div>
+	    					<h4 class="center-text my-3"><%= package.packageName %></h4>
+	    					<p class="">Speed : <%= package.normalSpeed %> mbps</p>
+	    					<!--<span class="text-info">BDIX Speed : <%= package.bdixSpeed %> mbps</span><br>-->
+	    					<!--<span class="text-info">Google Speed : <%= package.googleSpeed %> mbps</span><br>-->
+	    					<p class="">Price : <%= package.packagePrice %> BDT</p>
+	    					<!--router.get('/:package/package-action', middlewares.checkIspLoginStatus, packageController.packageAction)-->
+	    					<a href="/<%=package.packageName%>/package-action"class="btn submit mb-3">Details</a>
+	    				</div>
+    				</div>
+    			<% }) %>
+    		</div>
+    	</div>
+
+		  <div class="w-100 clearfix" style=""></div>
+		  <div id="location">
+		        <h4 class="text-center mt-5 mb-3"><strong>Locations</strong></h4>
+			    	<h6 class="text-center">Total <%= locations.length %> Locations</h6>
+		        <div class="row m-4">
+		        	<!--router.get('/:nameOfIsp/addLocation', middlewares.checkIspLoginStatus, packageController.addLocation)-->
+		            <a href="/<%= nameOfIsp %>/addLocation" role="button" class="col-12 col-md-4 btn action text-white mr-2 mt-2"><i class="fas fa-edit"></i>Add location</a>  
+		        	<!--location list is a collapse element-->
+		        	<a class="btn col-12 col-md-4 action text-white mt-2" data-toggle="collapse" href="#location-list" role="button" aria-expanded="false" aria-controls="location-list">
+    					<i class="far fa-eye"></i> Location list
+					</a>
+		        </div>
+		        <!--expand location-->
+		        <div class='collapse' id='location-list'>
+		        
+			        <% if (locations.length>0){
+			        	locations=locations.sort();
+			        %>
+			        <ul class="location-list ml-4"style="padding:2px">
+	    		        	<% locations.forEach(function(location){%>
+	    		        		<div class="row border my-1 position-relative">
+		    		            	<li class="p-2"><%=location %></li>
+		    		            	<!--We've used AJAX through which we remove location from database-->
+		    		            	<a href="javascript:void(0)" class="float-right removeLocation position-absolute" 
+		    		            	style="right: 5px;top: 9px;"><i class="fas fa-times"></i></a>
+		    		            </div>
+	    		        		
+	    		        	<% })%>
+	    		        	<div class="error text-error"></div>
+	    		    	<% } else { %>
+	    		    		<p class="text-danger-custom text-center"> No location found yet </p>
+	    		    	<% } %>
+			        </ul>
+		    	</div>
+		  </div>  
+		    <div id="about-isp">
+		    	<h4 class="text-center m-4"><strong>Profile</strong></h4>
+		    
+			    	 <div class="row m-4">
+			    	 	<!--router.get('/:nameOfIsp/editIspProfile', middlewares.checkIspLoginStatus,packageController.editIspProfile )-->
+			        	<a href="/<%= nameOfIsp %>/editIspProfile" role="button" class="col-12 col-md-4 btn action text-white mr-2 mt-2"><i class="fas fa-edit"></i>Edit Profile</a>  
+			        	<!--router.get('/:nameOfIsp/uploadLogo', middlewares.checkIspLoginStatus,packageController.uploadLogo )-->
+			        	<a href="/<%= nameOfIsp %>/uploadLogo"class="col-12 col-md-4 btn action text-white  mt-2"><i class="fas fa-upload"></i>Upload logo</a>  
+			        </div>
+			        
+			        <div class="ml-4">
+			        	<div class="row ml-0">
+			        		<p class="col-4 pl-0">Name of ISP :</p>
+			        		<p class="col-8"><%= isp.nameOfIsp %></p>
+			        	</div>
+					    	
+					    	
+					    <div class="row ml-0">
+					    	<p class="col-4 pl-0">Established on: </p>
+					    	<p class="col-8">
+					    		<% if (!isp.establishedOn) {%>
+					    			<span class="no-input">no input yet</span> 
+					    			<%} else {%>
+					    			<%= isp.establishedOn %>
+					    		<% } %>
+					    	</p>
+					    </div>
+					    <div class="row ml-0">
+					    	<p class="col-4 pl-0">Contact: </p>
+					    	<p class="col-8">
+					    		<% if (isp.phone) { 
+					    			%>+88 <%=isp.phone %> 
+					    		<% } else { 
+					    			%><span class="no-input">no input yet</span>
+					    		<% } %>
+					    	</p>
+					    </div>
+					    <div class="row ml-0">
+					    	<p class="col-4 pl-0">Registration No. : </p>
+					    	<p class="col-8">
+					    		<% if (!isp.registrationNumber) {
+					    			%><span class="no-input">no input yet</span> 
+					    		<% } else {%>
+					    			<%= isp.registrationNumber %>
+					    		<% } %>
+					    	</p>
+					    </div>
+					    <div class="row ml-0">
+					    	<p class="col-4 pl-0">About: </p>
+					    	<p class="col-8">
+					    		<% if (!isp.about) {
+					    			%><span class="no-input">no input yet</span> 
+					    		<% } else { %>
+					    			<%= isp.about %>
+					    		<% } %>
+						    </p>	
+					    </div>
+					    <div class="row ml-0">
+						    <p class="col-4 pl-0">Head Office: </p>
+						    <p class="col-8">
+						    	<% if (!isp.headOffice) {
+						    		%> <span class="no-input">no input yet</span> 
+						    		<% } else { %>
+						    			<%= isp.headOffice %>
+						    		<% } %>
+						    </p>
+						</div>
+						<div class="row ml-0">
+							<p class="col-4 pl-0">Facebook Messenger Link: </p>
+						    <p class="col-8">
+						    	<% if (!isp.messengerLink) {
+						    	%><span class="no-input">no input yet</span> 
+						    	<% } else { %>
+						    		<%= isp.messengerLink %>
+						    	<% } %>
+						    </p>
+						</div>
+		    	</div>
+		    	</div>
+	   </div>
+    </div>
+</div>	
+<div class="w-100"style="clear:both"></div> 
+<% include ../partials/footer %>
+<script>
+
+	$('.removeLocation').click(function(e){
+		
+		e.preventDefault();
+		let l=$(this),
+			data = {},
+			/** router.post('/:nameOfIsp/removeLocation', middlewares.checkIspLoginStatus, packageController.removeLocation) */
+			url='<%=baseURL%>/<%=nameOfIsp%>/removeLocation',
+			output="";
+		
+		data.location=$(this).prev('li').text();
+		console.log(data.location);
+		$.ajax({
+				type: 'POST',
+				data: data,
+				url: url,	
+                error: function() {
+			      $('.error').text('Sorry an unexpected problem occured, please try again');
+			   	},					
+			    success: function(response) {
+                	if (response!=""){
+                    	$('.error').text("You deleted "+response).removeClass('text-danger').addClass('text-success');
+                    	console.log(l);
+                    	l.closest('div').remove();
+                    } else {
+                    	$('.error').text("You didn't delete any location").removeClass('text-success').addClass('text-danger');
+                    }
+                }
+            })
+	})
+	/** Contents of popup which shown when ISP creates a new package successfully */
+	let p=$('.packageCreated').val();
+	console.log('p= '+p);
+	if(p.length>0){
+		let speech=`You just have created a new package successfully`;
+
+		Swal.fire({
+		title: `Congratulations!!`,
+		text: speech,
+		type: `success`,
+		  
+		})
+	}
+</script>

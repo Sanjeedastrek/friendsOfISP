@@ -1,0 +1,58 @@
+<!-- all profile complete notifications will be shown to respective ISP, ISP can verify also here -->
+
+<% include ../partials/header %>
+
+<div id="main">
+	<div class="table-responsive">
+  		<table class="table table-hover">
+  			<% let i=0; %>
+  			<thead>
+				<tr>
+					<h4 class="text-center p-2">Pending Profile Notifications </h4>
+				</tr>
+				<tr>
+				    <th scope="col">#</th>
+				    <th scope="col">Customer ID</th>
+				    <th scope="col">Customer Name</th>
+				    <th scope="col">Phone</th>
+				    <th scope="col">Address</th>
+				    <th scope="col">Package</th>
+				    <th scope="col">Date of Completion</th>
+				    <th scope="col">Verify</th>
+				</tr>
+			</thead> 
+			<tbody>
+				<% notifications.forEach(function(notification){%>
+				<tr>	
+					<th scope="row"><%= ++i%></th>
+					<td>aaaaaaaaaa</td>
+					<td>bbbbbbbbbb</td>
+					<td>ccccccccc</td>
+					<td><%= notification.address %></td>
+					<td><%= notification.package %></td>
+					<td><%= notification.completionDate %></td>
+					<td>
+						<form method="POST" action="<%=baseURL%>/<%=notification.customerName%>/verify-user" id="verify-user">
+							<div class="form-check d-inline mx-2">
+								<input class="form-check-input verify" type="radio" name="userVerification" id="verifyRadio1" value="invalid">
+							  	<label class="form-check-label" for="verifyRadio1"class="">Invalid</label>
+							</div>
+							<div class="form-check d-inline mx-2">
+								<input class="form-check-input verify" type="radio" name="userVerification" id="verifyRadio2" value="valid">
+							  	<label class="form-check-label" for="verifyRadio2">Valid</label>
+							</div>
+						</form>
+					</td>
+					
+				</tr>
+			  	<% }) %>
+			</tbody>
+		</table>
+	</div>
+
+<% include ../partials/footer %>
+<script type="text/javascript">
+	$('.verify').click(function(){
+		$('#verify-user').submit();
+	})
+</script>

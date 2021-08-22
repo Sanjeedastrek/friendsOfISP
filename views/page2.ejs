@@ -1,0 +1,430 @@
+<!--router.post('/find-isp', packageController.findIsp)-->
+<% include ./partials/header %>
+<div class="container-fluid mt-2 pt-2" style="min-height:500px; height:auto">
+
+	<div class="col-12 col-md-12 float-left p-0">
+					
+		<div class="col-12 col-md-10 float-left  p-0">
+			
+			<form method="POST" id="find-isp-form" class="form-inline d-md-flex justify-content-md-start">
+				<!-- select ISP dropdown -->
+				<div class="dropdown col-12 px-0 col-md-4 ">
+					<button class="btn dropdown-toggle d-inline border-0 w-100 mt-2 bg-beige show-isp" type="button" id="show-isp" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							select ISP(optional)
+					</button>
+					<div class="dropdown-menu w-100"aria-labelledby="show-isp">
+						<% isps.forEach(function(isp)
+							{%>
+								<a class="dropdown-item w-100 d-block isp" href="javascript:void(0)"><%= isp.nameOfIsp %></a>
+							<% }) %>	
+							<input type="hidden" name="isp"value=""id="inputIsp">
+					</div>
+				</div>
+				
+				<div class="d-md-flex justify-content-md-between col-md-8 px-0">
+					<!-- input location -->
+					<div class="form-group col-md-8 px-0 px-sm-1" id="location-field">
+						<input class="form-control auto mt-2 w-100 " name="location" id="autocomplete"type="text" placeholder="Type location here" value="" required>
+						<div class="error text-error"></div>
+					</div>
+					<!-- submit -show it in sm to upper device -->
+					<input type="submit" value="Search" name=""id="search" class="d-none d-sm-block btn submit mt-2 text-white col-md-4">	
+				</div>
+				
+			
+				<div class="w-100"></div>
+				<div class="col-12 col-md-12 px-0">
+					
+					<div id="filter-output"class="float-left col-12 col-md-4 px-0">
+						<!-- select price range -->
+							<div id="slider"class="mt-2 mt-sm-4"style="min-width:200px"></div>
+							<div>
+								<div id="slider-value-lower" class="p-1 text-secondary float-left" name="upperValue"value=""></div>
+								<div id="slider-value-upper" class="p-1 text-secondary float-right" name="upperValue"value=""></div>
+							</div>
+					
+						<!--hide it in xs device-->
+						<div id="filter"class="mt-5 d-none d-sm-block">
+
+							<div class="border mt-4 p-1">Filter Items 
+								<span class="mx-2 float-right">
+									<!-- this is the svg path of filter icon -->
+									<svg aria-hidden="true" data-prefix="fal" data-icon="filter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-filter fa-w-16 fa-3x" id="funnel"><path fill="currentColor" d="M479.968 0H32.038C3.613 0-10.729 34.487 9.41 54.627L192 237.255V424a31.996 31.996 0 0 0 10.928 24.082l64 55.983c20.438 17.883 53.072 3.68 53.072-24.082V237.255L502.595 54.627C522.695 34.528 508.45 0 479.968 0zM288 224v256l-64-56V224L32 32h448L288 224z" class=""></path>
+									</svg>
+								</span>
+							</div>
+							<!-- <form class="find-isp-form"> -->
+							
+							<input type="hidden" name="lowerValue"value=""id="inputLowerValue">
+							<input type="hidden" name="upperValue"value=""id="inputUpperValue">
+						
+							<br/>
+							<!-- price & rating filter -->
+							<div class="form-check">
+									<input class="form-check-input input-price-rating" type="radio" name="priceRating" id="price-low-sm" value="price-low"checked>
+									<label class="form-check-label" for="price-low">
+										Price low to high
+									</label>
+								</div>
+
+							<div class="form-check">
+									<input class="form-check-input input-price-rating" type="radio" name="priceRating" id="price-high" value="price-high" >
+									<label class="form-check-label" for="price-high">
+										Price high to low
+									</label>
+								</div>
+												
+							<div class="form-check">
+									<input class="form-check-input input-price-rating" type="radio" name="priceRating" id="rating-high" value="rating-high">
+									<label class="form-check-label" for="rating-high">
+										Rating high to low
+									</label>
+								</div>
+							<div class="form-check">
+									<input class="form-check-input input-price-rating" type="radio" name="priceRating" id="rating-low" value="rating-low">
+									<label class="form-check-label" for="rating-low">
+										Rating low to high
+									</label>
+							</div>
+							<br/>
+							<hr>
+							<div class="form-check mt-4">
+								<input class="form-check-input" type="checkbox" value="" id="corporate">
+								<label class="form-check-label" for="corporate">
+									Corporate use
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" value="" id="home">
+								<label class="form-check-label" for="home">
+									Home use
+								</label>
+							</div>
+						</div>
+						
+						<!--show only in xs -->
+						<button id="filter-btn-xs" data-toggle="collapse" data-target="#filter-xs" class="d-block d-sm-none col-12 submit my-2 ">Filter Items
+							<span class="mx-2 float-right">
+									 <!--this is the svg path of filter icon -->
+									<svg aria-hidden="true" data-prefix="fal" data-icon="filter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-filter fa-w-16 fa-3x" id="funnel"><path fill="currentColor" d="M479.968 0H32.038C3.613 0-10.729 34.487 9.41 54.627L192 237.255V424a31.996 31.996 0 0 0 10.928 24.082l64 55.983c20.438 17.883 53.072 3.68 53.072-24.082V237.255L502.595 54.627C522.695 34.528 508.45 0 479.968 0zM288 224v256l-64-56V224L32 32h448L288 224z" class=""></path>
+									</svg>
+							</span>
+						</button>
+						
+						<!--show only in xs -->
+						<div id="filter-xs"class="mt-2 d-none pl-2">
+
+							<!--<div class="border mt-0 p-1">Filter Items -->
+							<!--	<span class="mx-2 float-right">-->
+									 <!--this is the svg path of filter icon -->
+							<!--		<svg aria-hidden="true" data-prefix="fal" data-icon="filter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-filter fa-w-16 fa-3x" id="funnel"><path fill="currentColor" d="M479.968 0H32.038C3.613 0-10.729 34.487 9.41 54.627L192 237.255V424a31.996 31.996 0 0 0 10.928 24.082l64 55.983c20.438 17.883 53.072 3.68 53.072-24.082V237.255L502.595 54.627C522.695 34.528 508.45 0 479.968 0zM288 224v256l-64-56V224L32 32h448L288 224z" class=""></path>-->
+							<!--		</svg>-->
+							<!--	</span>-->
+							<!--</div>-->
+							 <form class="find-isp-form"> 
+							
+							<input type="hidden" name="lowerValue"value=""id="inputLowerValue">
+							<input type="hidden" name="upperValue"value=""id="inputUpperValue">
+						
+							 <!--price & rating filter -->
+							<div class="form-check">
+									<input class="form-check-input input-price-rating" type="radio" name="priceRating" id="price-low" value="price-low"checked>
+									<label class="form-check-label" for="price-low">
+										Price low to high
+									</label>
+								</div>
+
+							<div class="form-check">
+									<input class="form-check-input input-price-rating" type="radio" name="priceRating" id="price-high" value="price-high" >
+									<label class="form-check-label" for="price-high">
+										Price high to low
+									</label>
+								</div>
+												
+							<div class="form-check">
+									<input class="form-check-input input-price-rating" type="radio" name="priceRating" id="rating-high" value="rating-high">
+									<label class="form-check-label" for="rating-high">
+										Rating high to low
+									</label>
+								</div>
+							<div class="form-check">
+									<input class="form-check-input input-price-rating" type="radio" name="priceRating" id="rating-low" value="rating-low">
+									<label class="form-check-label" for="rating-low">
+										Rating low to high
+									</label>
+							</div>
+							<hr>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" value="" id="corporate">
+								<label class="form-check-label" for="corporate">
+									Corporate use
+								</label>
+							</div>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" value="" id="home">
+								<label class="form-check-label" for="home">
+									Home use
+								</label>
+							</div>
+						</div>
+						
+						<!-- submit -show it only in xs device -->
+						<input type="submit" value="Search" name=""id="search" class="d-block d-sm-none btn submit mt-0 text-white col-md-4">	
+				
+					</div>
+				
+			</form>
+					<div id="output"class="col-12 col-md-8 float-right p-0 m-0 p-sm-1">
+				<% if (packages) {%>
+						<% if(packages.length==0) {
+							%><h5 class="text-danger px-3 my-4 text-center">Sorry, We found 0 result </h5>
+						<% } else { %>
+							<h5 class="text-success px-3 my-4">We found <%= packages.length %> results </h5>
+						<%}%>
+						<% } %>
+
+				<div class="" id="output-div">
+					<% if(packages.length>0){ 
+						packages.forEach(function(package){%>
+						<div class="my-3 px-1 mx-sm-1 p-sm-1 border">
+						<!-- output displayed on page3.ejs -->
+
+							<a href="/<%=package.nameOfIsp%>/page"class="row">
+								<div class="col-4 col-md-4 d-flex justify-content-center align-items-center">
+									<img src="img/uploads/<%=package.logo%>" class="isp-logo pl-2 my-2 mw-100">
+								</div>
+
+								<div class="col-8 col-md-5 isp-info my-auto">
+									<p class="isp-name"><%= package.nameOfIsp %></p>
+									<p class="package-name mb-0"><%= package.packageName %><span class=""> (<%= package.normalSpeed %> Mbps)</span></p>
+									<p class="package-price"><%= package.packagePrice %> BDT / month</p>
+								</div>
+								<input type="hidden" id="avgSetter" value="<%= package.averageRating %>" name="">
+									<div class="col-md-2 isp-rating text-right px-2 my-auto d-none d-sm-block">
+										<% if (package.averageRating==0){ %>
+											<span class="text-danger pr-2">no review yet</span>
+										<%} else {%>
+											<span id="avgRating" class="avgRating"data-rating="<%= package.averageRating %>"><%= package.averageRating %></span>
+										<%}%>
+									</div>	
+							</a>
+						</div>
+						<% })}%>
+				</div>
+			</div>
+				</div>
+		</div>	
+		<div class='col-12 col-md-2 float-right d-flex justify-content-center'>
+			<img src="https://via.placeholder.com/200x500/fd7e14/FFFFFF/?text=IPaddress.net">
+		</div>
+	
+	</div>	
+</div>
+
+
+<% include ./partials/footer %> <!--this is usual footer -->
+<!--this is about implementing nouislider plugin & taking price range(from, to) -->
+
+<script type="text/javascript">
+	
+	initAutocomplete();
+	
+	$(document).ready(function(){
+		// ensure this radio is checked because in html checked attribute doesn't work
+		$("#price-low-sm").prop("checked", true);
+	
+		let data={};
+
+		// nouislider initialization & options
+
+			$('form#find-isp-form').submit(function(e){
+				
+			e.preventDefault();
+			let slider = document.getElementById('slider'),
+				lower = document.getElementById('slider-value-lower'),
+				upper = document.getElementById('slider-value-upper'),
+				lowerInput = document.getElementById('inputLowerValue'),
+				upperInput = document.getElementById('inputUpperValue'),
+				inputPriceRating = document.getElementsByClassName('input-price-rating'),
+				resultText=$('#output'),
+				selectedCheckbox;
+			let isp = $('#inputIsp').val();
+
+			let location = $('#autocomplete').val();
+
+			let url='<%=baseURL%>/find-isp-detail';
+			// lowerInput & upperInput are hidden input variables so they should be given value
+			lowerInput.value=lower.innerHTML; 
+			upperInput.value=upper.innerHTML; 
+			data.location= location;
+			data.isp = isp;
+			data.lowerValue = lowerInput.value;
+			data.upperValue = upperInput.value;
+			
+			console.log(data);
+		
+			
+			$.ajax({
+				type: 'POST',
+				// data: JSON.stringify(data), we dont need to stringify
+				data: data,
+				url: url,
+				error: function() {
+			      $('.error').text('Sorry an unexpected problem occured, please try again');
+			   },
+
+			    success: function(response) {
+			    	// after ajax executes, first we need to empty #output then add response to #output
+                	console.log('success');
+                   
+                    // collect selected radio button's value (there are 4 radio buttons)
+                    for (i=0;i<inputPriceRating.length;i++){
+						if (inputPriceRating[i].checked){
+							selectedCheckbox=inputPriceRating[i].value; 
+							break;
+						}
+					}
+					 
+					// empty out the div to incorporate ajax response 
+                    $("#output").empty();
+                    // next block shows number of package found
+                    if (response.packages) {
+						if(response.packages.length==0) {
+							resultText.html('<h5 class="text-danger px-3 my-4 text-center">Sorry, We found 0 result </h5>')
+						} else {
+							let packageLength= response.packages.length; 
+								resultText.html('<h5 class="text-success px-3 my-4">We found '+ packageLength +' results </h5>');
+							}
+						}
+						
+					// let's sort the packages 
+						response.packages.sort(function(a, b) { 
+							console.log(" touched ");
+							if (selectedCheckbox=="price-low"){ //lower to higher price
+								return  ( a.packagePrice - b.packagePrice  ||  a.packageName.localeCompare(b.packageName));
+							} else if (selectedCheckbox=="price-high"){ //higher to lower price
+								return - ( a.packagePrice - b.packagePrice  ||  a.packageName.localeCompare(b.packageName));
+							} else if (selectedCheckbox=="rating-low"){ //lower to higher rating
+								return  ( a.averageRating - b.averageRating  ||  a.packageName.localeCompare(b.packageName));
+								} else if (selectedCheckbox=="rating-high"){ //higher to lower rating
+									return  - ( a.averageRating - b.averageRating  ||  a.packageName.localeCompare(b.packageName));
+								} 
+						});
+						
+						$parentElement = `<div class="">`;
+						
+                    	response.packages.forEach(function(package) {
+							$parentElement += `<div class="my-3 mx-1 p-1 border">
+										<a href="/${package.nameOfIsp}/page"class="row">
+											<div class="col-4 col-md-4 d-flex justify-content-center align-items-center">
+												<img src="img/uploads/${package.logo}"class="isp-logo pl-2 my-2 mw-100">
+											</div>
+
+											<div class="col-8 col-md-5 isp-info my-auto">
+												<p class="isp-name">${package.nameOfIsp}</p>
+												<p class="package-name mb-0">${package.packageName}<span class=""> (${package.normalSpeed} Mbps)</span></p>
+												<p class="package-price">${package.packagePrice} BDT / month</p>
+												<div class="d-block d-sm-none">
+													${package.averageRating==0 ?
+														`<span class="text-danger pr-2">no review yet</span>`:
+														`<span id="avgRating" data-rating="${package.averageRating}" class="avgRating"> ${package.averageRating}</span>`
+													}
+												</div>
+											
+											</div>
+
+											<input type="hidden" id="avgSetter" value="${package.averageRating}" name="">
+											<div class="col-md-2 isp-rating text-right px-2 my-auto d-none d-sm-block">
+												${package.averageRating==0 ?
+													`<span class="text-danger pr-2">no review yet</span>`:
+													`<span id="avgRating" data-rating="${package.averageRating}" class="avgRating"> ${package.averageRating}</span>`
+												}
+											</div>	
+										</a>
+									</div>`;
+
+                    	});
+
+                    $parentElement += `</div>`;
+        		    $("#output").append($parentElement);
+
+        		    // convert rating from number to star format using rateYo
+                    $('.avgRating').each(function(el) {
+
+                    	let rating = $(this).data("rating");
+
+                    	console.log(rating);
+
+						$(this).rateYo({
+					  		starWidth: "20px",
+					    	normalFill: "#e1e4e8",
+					    	ratedFill: "#19abd0",
+					    	// rating : document.getElementById('avgSetter').value,
+					    	rating : rating,
+					    	halfStar : true,
+					    	readOnly:true
+				  		})
+                    }); 
+                     initAutocomplete();
+             	}
+            })
+   		})
+		noUiSlider.create(slider, {
+		    start: [500, 2000], //position of initial marker
+		    connect: true,
+		    range: {
+		        'min': 0,
+		        'max': 5000
+		    },
+		    reset:false
+		    // tooltips: true, //user input shown as tooltip
+		});
+		
+		// set elements to show user input
+		var snapValues = [
+		    document.getElementById('slider-value-lower'),
+		    document.getElementById('slider-value-upper')
+		];
+		// update the upper & lower value when user changes it
+		slider.noUiSlider.on('update', function (values, handle) {
+		    snapValues[handle].innerHTML = values[handle];
+		 
+		});
+		
+		$('.isp').click(function(){
+ 			let take1=$(this).text();
+ 			$('#show-isp').text(take1);
+ 			document.getElementById('inputIsp').value=take1;
+		})
+
+		// convert rating from number to star format using rateYo
+  		$('.avgRating').each(function(el) {
+
+                    	let rating = $(this).data("rating");
+
+                    	console.log(rating);
+
+						$(this).rateYo({
+					  		starWidth: "20px",
+					    	normalFill: "#e1e4e8",
+					    	ratedFill: "#19abd0",
+					    	// rating : document.getElementById('avgSetter').value,
+					    	rating : rating,
+					    	halfStar : true,
+					    	readOnly:true
+				  		})
+                    }); 
+			
+ 	})	
+ 	
+ 	
+ 	$('#filter-btn-xs').click(function(e){
+ 		e.preventDefault();
+ 		$('#filter-xs').removeClass('d-none');
+ 		
+ 	})
+ 	
+	</script>
+
+	
+

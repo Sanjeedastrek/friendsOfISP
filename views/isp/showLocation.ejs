@@ -1,0 +1,23 @@
+<!-- this is show location form for isp -->
+
+<% include ../partials/header %>
+<div id="main">
+	<h3 class="text-center p-4"><%=nameOfIsp %> provides service in <%= locations.length%> 
+		<%if (locations.length>1)
+		{%>locations 
+			<%} else {%>
+				location
+			<%}%>
+	</h3>	
+	<ul class="alternate-list">
+		<%locations.forEach(function(location, index){%>
+			<li>
+				<div class='p-2'><%=index+1%>.&nbsp;&nbsp;&nbsp; <%=location%></div>
+			</li> 
+		<%})%>
+	</ul>
+
+</div>
+
+
+<% include ../partials/footer %>

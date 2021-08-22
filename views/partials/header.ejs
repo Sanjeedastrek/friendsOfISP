@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en-US">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>ISP Listing</title>
+		<link rel="shortcut icon" type="image/x-icon" href="/favicon.png">
+
+		<!-- Including jquery-->
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			crossorigin="anonymous"></script>
+		<!-- Including Bootstrap -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<!-- Including Google Font Lato -->
+		<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet">
+		<!-- Including Font Awesome -->
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="/css/nouislider.min.css">
+		 <!-- including rateYo css to implement star rating-2.3.2 -->
+  		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+  		<!-- Including Custom CSS -->
+		<link rel="stylesheet" type="text/css" href="/css/custom.css">
+		<!--Including autocomplete-->
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlyCIYF2hFnefzjj_PAnvlccGS532Q1Fw&libraries=places&callback=initAutocomplete"
+        ></script>
+        	
+        
+		<script>
+			$(function(){
+				
+			})
+		</script>
+		<!--not working-->
+        <!--<script src="https://terrylinooo.github.io/jquery.disableAutoFill/assets/js/jquery.disableAutoFill.min.js"></script>-->
+	</head>
+	<body>
+		<!-- Starting Header Section -->
+		<header>
+			<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+  				<a class="navbar-brand" href="/"><img src="/img/octolist-logo.png"class="img-fluid"></a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			    	<ul class="navbar-nav ml-auto">
+			    		
+				     	<!--<li class="nav-item">-->
+				      <!--  	<a class="nav-link" href="#">About</a>-->
+				      <!--	</li>-->
+				      	<% if (!currentUser && !currentRole) {%>
+				      	<li class="nav-item">
+			        		<a class="nav-link<% if (page_path==='/'){%> active-custom<% } %>" href="/">Home 
+			        		</a>
+			      		</li>
+				      	<li class="dropdown">
+							<button class="btn btn-custom nav-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						    	Registration
+							</button>
+							<div class="dropdown-menu pl-2" aria-labelledby="dropdownMenuButton">
+						    	<a href="/user-registration" class="dropdown-item nav-link<% if (page_path==='/user-registration'){%> active-custom<% } %>" href="#">Register as User</a>
+						    	<a href="/registration" class="dropdown-item nav-link<% if (page_path==='/registration'){%> active-custom<% } %>" href="#">Register as ISP</a>
+						    </div>
+						</li>
+					
+						<li class="dropdown">
+							<button class="btn btn-custom dropdown-toggle nav-link" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						    	Login
+							</button>
+							<div class="dropdown-menu pl-2" aria-labelledby="dropdownMenuButton">
+						    	<a href="/user-login" class="dropdown-item nav-link<% if (page_path==='/user-login'){%> active-custom<% } %>" href="#">Login as User</a>
+						    	<a href="/login"class="dropdown-item nav-link<% if (page_path==='/login'){%> active-custom<% } %>"  href="#">Login as ISP</a>
+						    </div>
+						</li>
+						<li class="nav-item">
+				      		<a class="nav-link contact" href="javascript:void(0)" onclick="sectionFinder(this)">Contact</a>
+				      	</li>
+				
+						<% } 
+						// if customer loggs in
+				      	else if (currentUser && currentRole.role==='customer') { console.log('currentCustomer: '+currentUser);%>
+				      	
+				        <li class="nav-item">
+				      		<a href="/<%= currentUser %>/profile" class="nav-link">Profile
+				      			<% if (profileComplete) {%>
+				            		<img src="../../../img/complete.png" class="profile-status" title="profile is complete">
+				            	
+				            	<% } else {%>
+				            	<img src="../../../img/incomplete.png" class="profile-status" title="profile is incomplete">
+				            	
+				            	<% } %>
+				            </a>
+				      	</li>
+		<!--user can only have these privileges if user's profile is verified valid & profile is complete. We need both
+		to consider as user can change profile anytime-->
+				      	<% if (canReview && profileComplete) { %>
+				      		<li class="nav-item">
+				            	<a href="/<%= currentUser %>/isp/package/review" role="button" class="nav-link<% if (page_path.indexOf('/review')!= -1){ %> active-custom <% } %>">Review
+				            	</a>
+				            </li>
+				            <li class="nav-item">
+				            	<a href="/<%= currentUser %>/isp/package/createTicket" role="button" class="nav-link<% if (page_path.indexOf('/createTicket')!= -1){%> active-custom <% } %>">
+				            		Open a support ticket
+				            	</a>
+				            </li>
+				            <li class="nav-item">
+				            	<a href="/<%= currentUser %>/ticketNotificationsUser" role="button" class="nav-link<% if (page_path.indexOf('/ticketNotificationsUser')!= -1){%> active-custom<% } %>"alt="View notifications " >
+				              Notifications
+				            	</a>
+				            </li>
+				            
+				            <% } %>
+				      	<li class="nav-item">
+				        	<a href="/user-logout"class="nav-link">User Logout</a>
+				        </li>
+				      	<% }
+				      	// if ISP loggs in
+						else if (currentUser && currentRole.role==='isp') { console.log('currentIsp: '+currentUser);%>
+							
+					      	<!--check whether the isp is verified or confirmed -->
+					      	<% if(verifiedIsp) { %>
+						      	<li class="nav-item">
+						        	<a href="/<%=currentUser%>" class="nav-link active-custom">Dashboard</a> 
+						      	</li>
+						     <% } else { %> 
+						    	<li class="nav-item">
+						        	<a href="javascript:void(0)" class="nav-link disabled">Dashboard</a> 
+						      	</li>
+				      		<% } %>
+				      			<li class="nav-item">
+					        		<a href="/logout" class="nav-link">Isp Logout</a>
+					      		</li>
+				      	<% } %>
+				    </ul>
+		    	</div>
+			</nav>
+		</header>
+		<!-- deliver flash message to user / customer when registration is successful --> 
+		<% if (afterSuccessfulRegistration && afterSuccessfulRegistration.length>0){%>
+    		<div class="p-2 mb-1 bg-success-custom text-white text-center"><%= afterSuccessfulRegistration %></div>
+    	<%} %>
+    	<!-- deliver flash message to isp when registration is successful --> 
+		<% if (notVerifiedIsp && notVerifiedIsp.length>0){%>
+    		<div class="p-2 mb-1 text-danger-custom text-center"><%= notVerifiedIsp %></div>
+    	<%} %>
+
+     <!-- deliver flash message to user when login is successful --> 
+      <% if (successfulLogin && successfulLogin.length>0){%>
+      <div class="p-2 mb-1 bg-success-custom text-white text-center"><%= successfulLogin %></div>
+      <%} %>
+      
+      <!-- deliver flash message to user when update package is successful --> 
+      <% if (afterSuccessfulPackageEdit && afterSuccessfulPackageEdit.length>0){%>
+      <div class="p-2 mb-1 bg-success-custom text-white text-center"><%= afterSuccessfulPackageEdit %></div>
+      <%} %>
+
+      <!-- deliver flash message to user when package is successfully deleted --> 
+      <% if (afterSuccessfulPackageDelete && afterSuccessfulPackageDelete.length>0){%>
+      <div class="p-2 mb-1 bg-success-custom text-white text-center"><%= afterSuccessfulPackageDelete %></div>
+      <%} %>
+
+       <!-- Prompt user to login if he wants to create package --> 
+      <% if (loginToCreatePackage && loginToCreatePackage.length>0){%>
+      <div class="p-2 mb-1 bg-success-custom text-white text-center"><%= loginToCreatePackage %></div>
+      <%} %>
+
+      <!-- Prompt user when he/she completes profile --> 
+      <% if (profileCompletion && profileCompletion.length>0){%>
+      <div class="p-2 mb-1 bg-success-custom text-white text-center"><%= profileCompletion %></div>
+      <%} %>
+
+	 <!-- alert when user's profile is not complete --> 
+      <% if (profileIncomplete && profileIncomplete.length>0){%>
+      <div class="p-2 mb-1 text-danger-custom text-center"><%= profileIncomplete %></div>
+      <%} %> 
+      
+      <!-- alert when isp's profile is not complete --> 
+      <% if (ispProfileComplete && ispProfileComplete.length>0){%>
+      <div class="p-2 mb-1 text-danger-custom text-center"><%= ispProfileComplete %></div>
+      <%} %>
+      
+      <!-- alert when user's profile is under verification process by ISP--> 
+      <% if (underVerification && underVerification.length>0){%>
+      <div class="p-2 mb-1 reply text-center"><%= underVerification %></div>
+      <%} %>
+      
+      <!-- alert when user is verified invalid by ISP --> 
+      <% if (invalidUser && invalidUser.length>0){%>
+      <div class="p-2 mb-1 text-danger-custom text-center"><%= invalidUser %></div>
+      <%} %>
+      
+      <!-- Thank user when he/she completes review --> 
+      <% if (reviewSubmission && reviewSubmission.length>0){%>
+      <div class="p-2 mb-1 bg-success-custom text-white text-center"><%= reviewSubmission %></div>
+      <%} %>
+
+      <!-- Thank user when he/she completes review --> 
+      <% if (createTicket && createTicket.length>0){%>
+      <div class="p-2 mb-1 bg-success-custom text-white text-center"><%= createTicket %></div>
+      <%} %>
+      
+      <!-- Prompt ISP to select a logo file--> 
+      <% if (noFileChosen && noFileChosen.length>0){%>
+      <div class="p-2 mb-1 text-danger-custom text-white text-center"><%= noFileChosen %></div>
+      <%} %>
+      
+      <!-- Prompt ISP to insert locations--> 
+      <% if (noLocation && noLocation.length>0){%>
+      <div class="p-2 mb-1 text-danger-custom text-center"><%= noLocation %></div>
+      <%} %>
+      
+      <!-- Prompt ISP to create package--> 
+      <% if (noPackage && noPackage.length>0){%>
+      <div class="p-2 mb-1 text-danger-custom text-center"><%= noPackage %></div>
+      <%} %>
+      
+      <!--<% if (failureFlash){%>-->
+      <!--<div class="p-3 mb-2 text-danger-custom"><%= failureFlash %></div>-->
+      <!--<%} %>-->
+
+		<!-- when password & confirm password dont match in password reset--> 
+      <% if (passwordsDontMatchError && passwordsDontMatchError.length>0){%>
+    	<div class="p-2 mb-1 text-danger-custom text-center"><%= passwordsDontMatchError %></div>
+      <%} %>
+      
+      <!-- when user input account that doesn't exist--> 
+      <% if (noAccountExistsError && noAccountExistsError.length>0){%>
+    	<div class="p-2 mb-1 text-danger-custom text-center"><%= noAccountExistsError %></div>
+      <%} %>
+      
+      <!-- wrong token--> 
+      <% if (invalidTokenError && invalidTokenError.length>0){%>
+    	<div class="p-2 mb-1 text-danger-custom text-center"><%= invalidTokenError %></div>
+      <%} %>
+      <!-- mail sent--> 
+      <% if (mailSent && mailSent.length>0){%>
+    	<div class="p-2 mb-1 bg-success-custom text-white text-center"><%= mailSent %></div>
+      <%} %>
+      
+      <!--password changed-->
+      <% if (passwordChanged && passwordChanged.length>0){%>
+    	<div class="p-2 mb-1 bg-success-custom text-white text-center"><%= passwordChanged %></div>
+      <%} %>
+      
+      <!--isp uploads logo successfully-->
+      <% if (successfulLogoUpload && successfulLogoUpload.length>0){%>
+    	<div class="p-2 mb-1 bg-success-custom text-white text-center"><%= successfulLogoUpload %></div>
+      <%} %>
+      
+      <!--either username of email exis in user / isp collection-->
+      <% if (alreadyRegistered && alreadyRegistered.length>0){%>
+    	<div class="p-2 mb-1 text-danger-custom text-center"><%= alreadyRegistered %></div>
+      <%} %>
+      
+      <!--either email / password incorrect -->
+      <% if (wrongUserPw && wrongUserPw.length>0){%>
+    	<div class="p-2 mb-1 text-danger-custom text-center"><%= wrongUserPw %></div>
+      <%} %>
+      
+      <!--either email / password incorrect -->
+      <% if (failureFlash && failureFlash.length>0){%>
+    	<div class="p-2 mb-1 text-danger-custom text-center"><%= failureFlash %></div>
+      <%} %>
+      
+      

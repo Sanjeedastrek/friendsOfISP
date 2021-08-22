@@ -1,0 +1,232 @@
+<!-- action buttons for specific packages displayed -->
+<!--router.get('/:package/package-action', middlewares.checkIspLoginStatus, packageController.packageAction) -->
+<% include ../partials/header %>
+
+<div  id="main" class="container-fluid">
+	<!--#verified is used only to show a sweet alert to ISP, it has nothing to do with verification.
+	HOW THIS WORKS?
+	when verified is not blank, it means ISP has verified the profile complete notification sent to it & an alert is displayed
+	in meantime, otherwise no alert is displayed-->
+	<input type='hidden' id='verified' value='<%=verified%>'>
+	<div class="content col-12 col-md-12 float-left pt-4 px-0"style="min-height:800px">
+		<h4 class="text-center m-4"><strong><%= package.packageName %></strong></h4> 
+		<div class="row m-4">
+			<!--<a href="/isp/<%= package.nameOfIsp %>/package/<%= package.packageName %>/delete"role="button" class="col-12 col-md-4 pt-2 btn action text-white"><i class="fas fa-edit"></i>Delete Package</a> -->
+	   		<a href="javascript:void(0)"role="button" class="col-12 col-md-4 pt-2 btn action disabled text-white"><i class="fas fa-edit"></i>Delete Package</a> 
+	   	</div>
+		 <!--action as tabs. We'll create 4 tabs-->
+	    <ul class="nav nav-tabs mt-4">
+            <!--First tab is to edit respective package-->
+            <li class="nav-item">
+              <a class="nav-link active" data-toggle="tab" href="#edit-package">Edit package</a>
+            </li>
+            <!--Second tab is to show profile complete notifications from customers / ISP users-->
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#notifications">Profile Notifications <%if (notifications.length>0){%><span class='text-danger-custom'>(<%=notifications.length %>)</span><%} else {%>
+              <span style='color:darkgray'>(0)</span><%}%></a>
+            </li>
+            <!--Third tab is to show the tickets created by the customers / ISP users-->
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#tickets">Tickets<%if (ticketAll.length>0){%><span class='text-danger-custom'>(<%=ticketAll.length %>)</span><%} else {%>
+              <span style='color:darkgray'>(0)</span><%}%></a>
+            </li>
+            <!--Fourth tab is show the reviews created by the customers / ISP users-->
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#reviews">Reviews<%if (reviewAll.length>0){%><span class='text-danger-custom'>(<%=reviewAll.length %>)</span><%}else {%>
+              <span style='color:darkgray'>(0)</span><%}%></a>
+            </li>
+        </ul>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+      	
+      	<!--Edit package content-->
+        <div id="edit-package" class="container tab-pane active"><br>
+        <!--router.put('/isp/:nameOfIsp/package/:packageName/edit', middlewares.checkIspLoginStatus, packageController.updatePackage)-->
+          <form method="POST" action="/isp/<%= package.nameOfIsp %>/package/<%= package.packageName %>/edit?_method=PUT" class="form-inline form-resize">
+				<fieldset class="">
+					<div class="form-group mb-3">
+						<label for="packageName" class="mr-3"> Name of Package </label>
+						<input type="text" class="form-control" name="package[packageName]" id="packageName" value="<%= package.packageName %>" autofocus required>
+					</div>
+					<div class="form-group mb-3">
+						<label for="normalSpeed"class="mr-3"> Normal Speed <i>( mbps )</i></label>
+						<input type="number" class="form-control" name="package[normalSpeed]" id="normalSpeed" value="<%= package.normalSpeed %>" required="required"maxlength="6"oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+					</div>
+					<div class="form-group mb-3">
+						<label for="bdixSpeed"class="mr-3"> BDIX Speed <i>( mbps )</i> </label>
+						<input type="number" class="form-control" name="package[bdixSpeed]" id="bdixSpeed" value="<%= package.bdixSpeed %>"maxlength="6" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+					</div>
+					<div class="form-group mb-3">
+						<label for="googleSpeed" class="mr-3"> Google Speed <i>( mbps )</i></label>
+							<input type="number" class="form-control" name="package[googleSpeed]" id="googleSpeed" value="<%= package.googleSpeed %>"maxlength="6"oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+					</div>
+					<div class="form-group mb-3">
+						<label for="packagePrice"class="mr-3"> Price <i>( BDT )</i></label>
+						<input type="number" class="form-control" name="package[packagePrice]" id="packagePrice" value="<%= package.packagePrice %>" required>
+					</div>
+					<input type="submit" id="isp-package" value="Submit" class="col-12 col-md-4 btn submit">  
+				</fieldset>
+			</form>
+		</div>
+		
+		<!--profile complete notifications content-->
+        <div id="notifications" class="container-fluid tab-pane fade"><br>
+        	<!--We've created a tabular view for notification details-->
+        	<div class="table-responsive">
+	        	<table id=""class="table table-hover notification-table table-bordered">
+			  			<% let i=0; %>
+			  			<thead>
+							<tr>
+								<h4 class="text-center p-2">Pending Profile Notifications</h4>
+								<h5 class="text-center p-2">Currently you have <%=notifications.length %> notifications</h5>
+							</tr>
+							<tr>
+							    <th scope="col" class="text-center align-middle">#</th>
+							    <th scope="col" class="text-center align-middle">Customer ID</th>
+							    <th scope="col" class="text-center align-middle">Customer Name</th>
+							    <th scope="col" class="text-center align-middle">Phone</th>
+							    <th scope="col" class="text-center align-middle">Address</th>
+							    <th scope="col" class="text-center align-middle">Package</th>
+							    <th scope="col" class="text-center align-middle">Date of Completion</th>
+							    <th scope="col" class="text-center align-middle">Verify</th>
+							</tr>
+						</thead> 
+						<tbody>
+							<% notifications.forEach(function(notification){%>
+							<tr>	
+								<th class="text-center align-middle" scope="row"><%= ++i%></th>
+								<td class="text-center align-middle"><%= notification.customerId %></td>
+								<td class="text-center align-middle"><%= notification.username %></td>
+								<td class="text-center align-middle"><%= notification.phone %></td>
+								<td class="text-center align-middle"><%= notification.address %></td>
+								<td class="text-center align-middle"><%= notification.package %></td>
+								<td class="text-center align-middle"><%= notification.completionDate %></td>
+								<td class='p-0 pl-md-1'>
+									<form method="POST" action="<%=baseURL%>/<%=notification.username%>/verify-user" id="verify-user">
+										<div class="form-check d-inline mx-0">
+											<input class="form-check-input verify" type="radio" name="userVerification" id="verifyRadio1" value="invalid">
+										  	<label class="form-check-label" for="verifyRadio1"class="">Invalid</label>
+										</div>
+										<br>
+										<div class="form-check d-inline mx-0">
+											<input class="form-check-input verify" type="radio" name="userVerification" id="verifyRadio2" value="valid">
+										  	<label class="form-check-label" for="verifyRadio2">Valid</label>
+										</div>
+									</form>
+								</td>
+								
+							</tr>
+						  	<% }) %>
+						</tbody>
+					</table>
+				</div>
+      	</div>
+      	
+      	<!--ticket contents-->
+        <div id="tickets" class="container-fluid tab-pane fade"><br>
+        	<div id="" class="color-code d-flex justify-content-center text-center mb-5">
+        	<!--in tickets collection, 0 means isp didn't reply yet, 1 means isp replied, 2 means ticket closed by user -->
+				<span class="no-reply mr-2"> still  no reply</span>
+				<span class="reply mr-2"> isp replies</span>
+				<span class="closed mr-2"> ticket closed</span>
+			</div>
+			<!--We've created a tabular view for ticket details-->
+			<div class="table-responsive">
+				<h4 class="text-center p-2">Tickets </h4>
+					<table class="table table-hover notification-table">
+			  			<% let j=0; %>
+			  			<thead>
+							
+							<tr>
+							    <th scope="col" class="text-center align-middle">#</th>
+							    <th scope="col" class="text-center align-middle">Date</th>
+							    <th scope="col" class="text-center align-middle">Package</th>
+							    <th scope="col" class="text-center align-middle">Ticket ID</th>
+							    <th scope="col" class="text-center align-middle">Department</th>
+							    <th scope="col" class="text-center align-middle">Ticket Title</th>
+							    <th scope="col" class="text-center align-middle">Ticket Description</th>
+							    <!--<th scope="col" class="text-center align-middle">Current Status</th>-->
+							</tr>
+						</thead>
+						<tbody>
+							<% ticketAll.forEach(function(ticket){%>
+						
+							<tr data-url="<%=baseURL%>/<%=ticket.package%>/<%=ticket.ticketId%>/replyTicket"
+								
+								<% if (ticket.ticketStatus==2)
+									{%> class="clickable-row closed"
+									<%} else if (ticket.ticketStatus==0)
+									{%> class="clickable-row no-reply"
+									<% } else if (ticket.ticketStatus==1)
+										{%>class="clickable-row reply"
+										<%}%>>
+								<th scope="row"><%= ++j%></th>
+								<td class="text-center align-middle"><%= ticket.ticketDate %></td>
+								<td class="text-center align-middle"><%= ticket.package %></td>
+								<td class="text-center align-middle"><%= ticket.ticketId %></td>
+								<td class="text-center align-middle"><%= ticket.department %></td>
+								<td class="text-center align-middle"><%= ticket.title %></td>
+								<td class="text-center align-middle"><%= ticket.description %></td>
+								<!--<td class="text-center align-middle"><%= ticket.ticketStatus %></td>-->
+							</tr>
+						  	<% }) %>
+						  	
+						</tbody>
+					</table>
+        </div>
+      </div>
+      
+      <!--package review contents -->
+      <div id="reviews" class="container-fluid tab-pane fade"><br>
+       
+				<% reviewAll.forEach(function (r) { 
+					%>
+					<div class="media m-3">
+							    <div class="mr-3 first-letter get-first-letter" src="..." alt="Generic placeholder" data-user="<%= r.nameOfReviewer %>"></div>
+							        <div class="media-body">
+							            <p class="mt-0"><%=r.nameOfReviewer%>&nbsp;&nbsp; <i class="fas fa-star blue"></i> &nbsp;<%=r.rating%> </p>
+							            <p class="mt-0"><%=r.comment%></p>
+							            <p class="mt-0"><%=r.reviewDate%></p>
+							        </div>
+							 </div><hr>
+					<% }) %>
+							       
+							      
+        </div>
+		</div>
+  </div>
+
+<div class="w-100"style="clear:both"></div> 
+<% include ../partials/footer %>
+
+<script>
+
+	$(function(){
+    	
+    	let verified=$('#verified').val();
+			// clicking on valid/invalid invokes submit action
+			$('.verify').click(function(){
+				console.log('verify clicked');
+				$('#verify-user').submit();
+				console.log('verify is :'+verify);
+				// console.log($('.verify').val());
+				
+			})
+			
+			
+			// based on the length of verified, we decide whether an alert should be displayed
+			if (verified.length>0){
+				console.log('verify is greater than 0');
+				Swal.fire({
+					title: "Thank you for verification",
+					text: "An email is sent to user informing profile verification status",
+					type: 'success'
+				});
+			}	
+		})
+		
+	
+</script>
+ 
+

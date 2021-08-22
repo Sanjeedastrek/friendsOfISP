@@ -1,0 +1,44 @@
+<!-- this is create profile form for user -->
+
+<% include ../partials/header %>
+
+ <div id="main">
+
+	<form method="POST" action="/<%=user.username%>/verify-user" class="container form-resize" id="verify-user">
+	 	<fieldset class="p-2">
+	 		<legend class="text-center p-4"> User Profile </legend>
+	 		
+	 		<p>User's current Isp : 		<%= user.nameOfIsp %></p>
+	 		<p>User's current package (edit package if user uses wrong package ) : <input type="text" name="package" value='<%= user.package %>'></p>
+	 		<p>User's Customer ID : 		<%= user.customerId %></p>
+	 		<p>User's Contact No. : 		+88&nbsp;<%= user.phone %></p>
+	 		<p>User's Address : 			<%= user.address %></p>
+	 		<p>Please Verify </p>
+			<div class="form-check ml-5">
+			  <input class="form-check-input" type="radio" name="userVerification" id="exampleRadios1" value="invalid" checked>
+			  <label class="form-check-label" for="exampleRadios1">Invalid</label>
+			</div>
+			<div class="form-check ml-5">
+			  <input class="form-check-input" type="radio" name="userVerification" id="exampleRadios2" value="valid">
+			  <label class="form-check-label" for="exampleRadios2">Valid</label>
+			</div>
+			
+			<input type="submit" value="submit" class="col-12 col-md-4 btn submit mt-4">  
+		
+
+
+	 	</fieldset>
+	</form>
+
+ </div>
+ 
+<% include ../partials/footer %>
+<% include ../partials/validation/isp-packages-selection%>
+<script type="text/javascript">
+	// required isp fieldset
+
+</script>
+
+
+
+

@@ -1,0 +1,49 @@
+<script type="text/javascript">
+		
+		let slider = document.getElementById('slider'),
+			lower =document.getElementById('slider-value-lower'),
+			upper=document.getElementById('slider-value-upper'),
+			lowerInput =document.getElementById('inputLowerValue'),
+			upperInput=document.getElementById('inputUpperValue');
+
+		// nouislider initialization & options
+		noUiSlider.create(slider, {
+		    start: [500, 2000], //position of initial marker
+		    connect: true,
+		    range: {
+		        'min': 0,
+		        'max': 5000
+		    },
+		    reset:false
+		    // tooltips: true, //user input shown as tooltip
+		});
+		
+		// set elements to show user input
+		var snapValues = [
+		    document.getElementById('slider-value-lower'),
+		    document.getElementById('slider-value-upper')
+		];
+		// update the upper & lower value when user changes it
+		slider.noUiSlider.on('update', function (values, handle) {
+		    snapValues[handle].innerHTML = values[handle];
+		});
+		//end of nouislider options
+
+		// control user interaction with this form
+		// isp name is shown in dropdown top when user selects one
+		$('.isp').click(function(){
+ 			let take1=$(this).text();
+ 			$('#show-isp').text(take1);
+ 			document.getElementById('inputIsp').value=take1;
+		})
+		
+		// we need to take the input chosen by user in location
+		document.getElementById('autocomplete').value= document.getElementById('autocomplete').innerHTML;
+		
+		// we need to set the 'name' attribute. it's very important to put following codes in submit callback 
+		$('form').submit(function(){
+			lowerInput.value=lower.innerHTML;
+			upperInput.value=upper.innerHTML;
+		})
+		
+	</script>

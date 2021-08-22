@@ -1,0 +1,76 @@
+<!-- this is create package form for isp -->
+
+<% include ../partials/header %>
+
+ <div id="main">
+
+	<form method="POST" action="/<%=nameOfIsp%>/savePackage" class="container form-resize">
+	 	<fieldset class="p-4 m-4">
+	 		<legend class="text-center"> Create Package </legend>
+	 	
+		 		<div class="form-group">
+				    <label for="packageName"> Name of Package <span class="text-danger"> * </span></label>
+				    <input type="text" class="form-control" name="packageName" id="packageName" placeholder=""required autofocus>
+				</div>
+				
+				<div class="form-row">
+	      		
+	      			<div class="form-group col-md-4">
+					    <label for="normalSpeed"> Normal Speed <i class="right-align">(mbps)</i><span class="text-danger"> *</span> </label>
+					    <div class="input-icon-right">
+					    	<input type="number" class="form-control" name="normalSpeed" id="normalSpeed" maxlength="6"placeholder="" required="required" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+		      				
+		      			</div>
+		      			
+		      		</div>
+	
+	      			<div class="form-group col-md-4">
+					    <label for="bdixSpeed"> BDIX Speed <i class="right-align">(mbps)</i></label>
+					    <div class="input-icon-right">
+					    	<input type="number" class="form-control" name="bdixSpeed" id="bdixSpeed" maxlength="6" placeholder=""oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+		      			
+		      			</div>
+		      			
+		      		</div>
+		      		<div class="form-group col-md-4">
+					    <label for="googleSpeed"> Google Speed <i class="right-align">(mbps)</i></label>
+					    <div class="input-icon-right">
+					    	<input type="number" class="form-control" name="googleSpeed" id="googleSpeed" maxlength="6" placeholder=""oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+		      			
+		      			</div>
+		      			
+		      		</div>
+	      		
+
+      		</div>
+      		<div class="form-group ">
+				    <label for="packagePrice"> Price <i>(BDT)</i><span class="text-danger"> *</span> </label>
+				    <div class="input-icon">
+				    	<input type="number" class="form-control" name="packagePrice" id="packagePrice" placeholder=""required>
+	      				
+	      			</div>
+	      			
+	      		</div>
+			
+
+			  <input type="submit" id="isp-package" value="Create Package" class="col-12 col-md-4 btn submit">  
+			  
+	 	</fieldset>
+	  
+	</form>
+
+ </div>
+<% include ../partials/footer %>
+<script>
+	$('#isp-package').click(function(e){
+		swal({
+			title: "Successful!",
+			text: "You have created a new package successfully!",
+			button: false,
+		});
+	})
+
+</script>
+
+
+<!-- when user push reset button, the error or success message doesn't disappear -->

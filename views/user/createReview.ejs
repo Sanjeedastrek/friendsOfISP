@@ -1,0 +1,85 @@
+<!-- this is create profile form for user -->
+
+
+<% include ../partials/header %>
+
+	<div id="">
+	 	<div class="container form-resize">
+	 		<h4 class="text-center pt-2 pb-1 robotoBold deep-gray font-2em"> <%=customer.nameOfIsp %></h4>
+			<h4 class="text-center pb-1 robotoBold mid-gray "><%=customer.package %></h4>
+			<p class="text-center text-info font-italic" >
+				Check your <a href="/<%=currentUser%>/profile">profile</a></p>
+		
+			<form method="POST" action="/<%=currentUser%>/<%=customer.nameOfIsp%>/<%=customer.package%>/review" class="container" 
+				id="review-form">
+			 	<fieldset>
+			 		<legend class="text-center robotoLight light-gray font-1em">Please take a while to review your chosen package</legend>
+				 	
+				 	<!-- User writes comment -->
+				 	<div class="form-group mb-5">
+						<label for="comment"> Comment <span class="text-danger-custom">* </span></label>
+						<textarea class="form-control" id="comment" name="comment" rows="3" required="required"></textarea>
+					</div>
+					
+					<!-- User rate package -->
+					<label for="ratingValue"> Rate please! <span class="text-danger-custom">* </span> </label>
+					
+					<div id="rateYo" class="m-2 d-inline-block rate-position" style="top:-2px!important"></div><span id='rate'></span>
+					<input type="hidden" name="ratingValue" id="ratingValue" value="">
+					<div><span class="error text-danger"></span></div>
+			
+					<input type="submit" value="Submit Review" class="col-12 col-md-4 btn submit mt-4">  
+				
+				</fieldset>
+			</form>
+		</div>
+		<div id="big"></div>
+	</div>
+ 	
+ 
+<% include ../partials/footer %>
+<script type="text/javascript">
+
+/** initialize rateYo and specify options	
+ rateYo is a rating plugin
+ */
+$(function () {
+	let ms= $('.must-submit'),
+		rv= document.getElementById('ratingValue');
+
+  $("#rateYo").rateYo({
+  	starWidth: "20px",
+    normalFill: "#A0A0A0",
+    ratedFill: "#19abd0",
+    rating : 0,
+   /** allow to rate half also */
+    halfStar : true,
+  	}).on("rateyo.set", function (e, data) {
+  		let d=data.rating;
+  		document.getElementById("ratingValue").value = d;
+  		document.getElementById('rate').innerHTML = d;
+		console.log(d);
+		});
+ 
+ 
+	// user must put a rating to complete review
+	$('#review-form').submit(function(e){
+		
+		// if ratingValue is not defined submit button doesn't work
+		if(!rv.value){
+			$('.error').text('Please put a rating ');
+			e.preventDefault();	
+		} else {
+			$('.error').text("");
+		} 
+	}) 
+});
+
+
+
+
+</script>
+
+
+
+

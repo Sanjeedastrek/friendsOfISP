@@ -1,0 +1,122 @@
+<!-- this is add location form for isp -->
+
+<% include ../partials/header %>
+
+ <div id="main">
+	<!--location appears in list-->
+	<form method="GET" action="/<%=nameOfIsp%>" class="container form-resize">
+		<fieldset class="p-2">
+	 		<legend class="text-center p-4"> Add Location</legend>
+	 		<div class="text-success"></div>
+			<!--input location-->
+	 		<div class="form-group mr-3" id="location-field">
+				<label> Location</label>
+				
+				<input class="form-control auto my-2" name="location" onfocus="geolocate()"id="autocomplete"type="text" placeholder="Enter address" required>
+				<div class="error text-error"></div>
+				
+			</div>
+			<!--<div class="d-flex justify-content-md-center">-->
+				<a href="javascript:void(0)" role="button" class="col-12 col-md-4 submit btn add-location">Save</a>
+				<a href="<%=baseURL%>/<%=nameOfIsp%>" role="button" class="col-12 col-md-4 submit btn reset">Back</a>
+            <!--</div>-->
+			
+	 	</fieldset>
+	  
+	</form>
+
+ </div>
+<% include ../partials/footer %>
+
+<script type="text/javascript">
+
+let wrapper	= $('#location-field'), 
+	addLocation = $('.add-location'),
+	
+	auto = document.getElementsByClassName('auto'),
+	len =auto.length;
+
+// PLACES API
+let autocompletes=[];
+function initAutocomplete() {
+	autocomplete = new google.maps.places.Autocomplete(document.getElementById('autocomplete'), options);
+ // 	for (i = 0; i < len; i++) {
+	//    	autocomplete = new google.maps.places.Autocomplete(document.getElementsByClassName('auto')[i], options);
+	// }
+}
+// PERHAPS NOT NECESSARY
+function geolocate() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var geolocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+      var circle = new google.maps.Circle({
+        center: geolocation,
+        radius: position.coords.accuracy
+      });
+      autocomplete.setBounds(circle.getBounds());
+      //alert(geolocation.lat+ " "+geolocation.lng)
+      //console.log(geolocation.lat+ " "+geolocation.lng)
+      // for (i = 0; i < len; i++) {autocomplete.setBounds(circle.getBounds());}
+    });
+  }
+  else {alert("nothing");
+  	 console.log("nothing");
+  }
+}
+// END OF PLACES API
+
+$('.add-location').click(function(){
+	let data = {},  //this is the object is passed from user input
+		url='<%=baseURL%>/<%=nameOfIsp%>/addLocation',
+		output="";
+		data.location=document.getElementById('autocomplete').value;
+
+			$.ajax({
+				type: 'POST',
+				data: data,
+				url: url,	
+                error: function() {
+			      $('.error').text('Sorry an unexpected problem occured, please try again');
+			   	},					
+			    success: function(response) {
+                	console.log('success');
+                    console.log("so the new info is "+response);
+                    if (response==data.location){
+                    	$('.text-success').text("You just added "+response);
+                    	console.log(response);
+                    } else if (response=="nothing"){
+                    	console.log(response);
+                    	$('.text-success').text("You cannot add duplicate location ");
+                    } else {
+                    	$('.text-success').text("No location added ");
+                    }
+                    initAutocomplete();
+                }
+            })	
+	
+		text = '<div><input class="form-control auto my-2" name="location" type="text" onfocus="geolocate()"id="autocomplete"></div>';
+	
+        $('#location-field').html(text);
+
+	
+})
+$('body').on("click",".remove_field", function(e){ //user click on remove text
+        e.preventDefault(); 
+        $(this).parent('div').remove(); 
+        x--;
+})
+
+	$(document).ready(function(){
+		initAutocomplete();
+	})
+ 	
+ 		
+   
+
+</script>
+
+
+

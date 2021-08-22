@@ -1,0 +1,36 @@
+<script type="text/javascript">
+ 	$(document).ready(function(){
+ 		
+		let url='baseURL/find-isp-detail',
+			data={};
+			
+		
+		data.location= document.getElementById('autocomplete').innerHTML;
+		data.isp = document.getElementById('inputIsp').value;
+				
+			$.ajax({
+				type: 'POST',
+				// data: JSON.stringify(data), we dont need to stringify
+				data: data,
+				url: url,
+				beforeSend : function(){
+					// $('#output').html("");
+				},	
+                error: function() {
+			      $('.error').text('Sorry an unexpected problem occured, please try again');
+			   },
+
+			    success: function(response) {
+                	console.log('success');
+                    console.log(response.length);
+                    if(response.length===0){ //if no data found
+                    	$('#output').text(response);
+                    } else{
+                    		console.log(response)
+						}
+	         	}
+            })	
+ 		})
+ 	
+</script>
+

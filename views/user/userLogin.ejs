@@ -1,0 +1,30 @@
+<!-- show login form -->
+
+<% include ../partials/header %>
+
+<div id="main">
+	<form method="POST" action="/user-login" class="container registration-form form-resize">
+	 	<fieldset class="p-2 mt-4">
+	 		<legend class="text-center p-4"> User Login Form </legend>
+	 		
+			<div class="form-group mb-5">
+			    <label for="email"> Email </label>
+			    <input type="email" class="form-control" name="email" placeholder="" id="email" required autofocus>
+			</div>
+			<div class="form-group mb-5">
+			    <label for="password"> Password </label>
+			    <input type="password" class="form-control" name="password" id="password" placeholder=""required>
+			</div>
+			
+			<input type="submit" value="Login" class="col-12 col-md-4 btn submit">  
+		</fieldset>
+		<!--router.get('/user/forgot-password',userController.forgotPassword);-->
+		<a href="/user/forgot-password" class="btn">Forgot Password?</a>
+	</form>
+	
+</div>
+
+<% include ../partials/footer %>
+
+
+

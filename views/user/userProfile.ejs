@@ -1,0 +1,30 @@
+<!-- show profile -->
+
+<% include ../partials/header %>
+
+<div id="main">
+	
+
+	<h2 class="center-text">Profile for <%= user.nameOfUser %></h2>
+
+	<div class="container">
+		
+		Phone : <%= user.phone %><br/>
+
+		ISP : <% let userIsp =user.ISP; 
+			if (userIsp.length==0){ %>
+				<span class="text-danger">You still didn't choose ISP</span>
+			<% } else if (userIsp.length==1){%>
+				<span>one package which is </span>
+				<% } else if (userIsp.length>1){ 
+						userIsp.forEach(function(individualUserIsp){ %>
+						<span>Name of ISP: <%=individualUserIsp.ispName %></span>
+						<span>Package: <%=individualUserIsp.ispPackage %></span>
+
+					<% })} %>
+					<div><a href="/profile/edit" role="button">Edit Profile</a></div>
+	</div>
+	
+</div>
+
+<% include ../partials/footer %>

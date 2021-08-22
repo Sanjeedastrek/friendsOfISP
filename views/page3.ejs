@@ -1,0 +1,273 @@
+<!--isp details page (from page2 to page 3)-->
+<!--router.get('/:nameOfIsp/page', packageController.page)-->
+<!--remember while formatting, we need to reflect changes 2 times as AJAX is being used here-->
+<% include ./partials/header %>
+<div class="container-fluid mt-4">
+    <div class="row">
+    <!--left sidebar-->
+        <div id="page3-left-sidebar"class="col-12 col-md-2 text-center border-right">
+            <% if (!isp.logo) {%><img src="/img/incomplete.png" class="img-fluid mx-auto d-block isp-logo"> <%} else {%>
+                         <img src="/img/uploads<%=isp.logo%>" class="img-fluid mx-auto d-block isp-logo"><% } %>
+            <!--<img src="/img/uploads<%=isp.logo%>" style="max-width:70%" class="img-fluid mx-auto d-block">-->
+            <h6 class="p-2 mt-5"><%= isp.nameOfIsp %></h6>
+            <div class="round-rating" data-roundrating="<%= ispRating %>"><i class="fas fa-star blue"></i>  </div>
+            <hr>
+            <div id="page3-sidemenu" class="list-group">
+                <a class="list-group-item list-group-item-action" href="#packages">Top Packages</a>
+                <a class="list-group-item list-group-item-action" href="#about">About</a>
+            </div>
+        </div>
+
+        <!--middle part-->
+        <div id="page3-middle" class="col-12 col-md-8 float-left">
+            <div data-spy="scroll" data-target="#page3-sidemenu" data-offset="0">
+                
+                <div id="packages"class="">
+                    <h3 class="text-center">Our Packages</h3>
+                    <!--individual ISP's package-->
+                    <div id="package-card-wrapper" class="d-flex justify-content-around flex-wrap row">
+                        <% packages.forEach(function(package){ %>
+                            <a href="javascript:void(0)"
+                               class="col-12 col-md-4 float-left mx-auto d-block text-center mb-5"
+                               onclick="callPage('<%= isp.nameOfIsp %>', '<%= package.packageName %>');">
+                                <div class="m-3 package-name"><%= package.packageName %></div>
+                                <div class="top-div d-flex justify-content-center align-items-center">
+                                    <div class="speed">
+                                        <%= package.normalSpeed %>
+                                    </div>
+                                    <div class="star-rating">
+                                        <div class="pl-4"><strong>Mbps</strong></div>
+
+                                        <br>
+                                        <div class="averageRating pl-4"
+                                             data-rating="<%= package.averageRating %>"><%= package.averageRating %>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                                <div class="bottom-div">
+                                    <div class="price border">
+                                        <span class="font-weight-bold"> <%= package.packagePrice %> </span>BDT/month
+                                    </div>
+                                </div>
+                            </a>
+
+                        <% }) %>
+                    </div>
+                </div>
+                <div id="about" class="mt-4">
+                    <div class="row mb-4">
+                        <div class="col-4 col-md-3">About:</div>
+                        <% if (!isp.about) {%><div class="col-6 col-md-9 no-input">none</div> <%} else {%>
+                        <div class="col-8 col-md-9 robotoLight"><%=isp.about%></div><% } %>    
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-4 col-md-3">Started on</div>
+                        <% if (!isp.establishedOn) {%><div class="col-6 col-md-9 no-input">none</div> <%} else {%>
+                        <div class="col-8 col-md-9 robotoLight"><%=isp.establishedOn%></div><% } %>
+                    </div> 
+                    <div class="row mb-4">
+                        <div class="col-4 col-md-3">Contact</div>
+                        <% if (!isp.phone) {%><div class="col-6 col-md-9 no-input">none</div> <%} else {%>
+                        <div class="col-8 col-md-9 robotoLight"><%=isp.phone%></div><% } %>
+                       
+                    </div>
+                    <div class="row">
+                        <div class="col-4 col-md-3">Address</div>
+                        <% if (!isp.headOffice) {%><div class="col-6 col-md-9 no-input">none</div> <%} else {%>
+                        <div class="col-8 col-md-9 robotoLight"><%=isp.headOffice%></div><% } %>
+                    </div>
+                    <a class="btn submit col-12 col-md-4 mt-4"href="<%=isp.messengerLink%>">Buy Package</a>
+                </div>    
+            </div>
+        </div>
+        
+        
+        <!--right sidebar-->
+        <div class="col-12 col-md-2 float-right d-flex justify-content-center">
+            <img src="https://via.placeholder.com/200x500/fd7e14/FFFFFF/?text=IPaddress.net">
+        </div>
+</div>
+<!--general footer-->
+<% include ./partials/footer %>
+<script type="text/javascript">
+    // when user clicks on specific package, this function is invoked
+    /**
+     * invoked by clicking li#packages (on left sidebar, id= #page3-left-sidebar)
+     * this function sends ajax request to get package details like packagename, price, speed & reviews.
+     * output is placed on middle part
+     */
+    function callPage(isp, package) {
+        var data = {},
+            url = "<%=baseURL%>/packageDetails";
+        data.ispName = isp;
+        data.packageName = package;
+
+        $.ajax({
+            type: 'POST',
+            // data: JSON.stringify(data), we dont need to stringify
+            data: data,
+            url: url,
+            error: function () {
+                $('.error').text('Sorry an unexpected problem occured, please try again');
+            },
+            success: function (response) {
+                // after ajax executes, first we need to empty #page3-middle then add response to #page3-middle
+                let pcw=$("#package-card-wrapper");
+               
+                // empty out wrapper
+                pcw.empty();
+                // we should hide the header at this point
+                pcw.prev('h3').css({'display':'none'});
+                // remove previous classes so that the output should have different grid
+                pcw.removeClass('d-flex justify-content-around flex-wrap row');
+                console.log('success');
+                // this is only upper part 
+                let output = `
+
+                        <div class="mt-4">
+                        	<h4 class="">${response.packageName}</h4>
+                    	    <p class="speed" style="font-size:1.2em"><span class="d-inline">${response.package.normalSpeed}</span> Mbps </p>
+                    	    <p><a href="${response.package.messengerLink}" class="btn text-white buy-package-mobile d-block d-sm-none">Buy Now</a></p>
+                    	    <p class="review">Reviews (${response.reviews.length})</p>
+                    	    <p><span class="rate-position" style="font-size:1.2em;">${response.package.averageRating} </span><span class="packageRating pl-0"
+                    		data-rating="${response.package.averageRating}"></span> </p>
+                        </div>
+                        <button onclick="window.location.href='${response.package.messengerLink}'" class="btn text-white buy-package d-none d-sm-block">Buy Now</button>
+                    `;
+
+                let data1 = '';
+                response.reviewAll.forEach(function (r) {
+                    
+                    let name = getFirstLetters(r.nameOfUser);
+
+                    let review = `<div class="media mt-1">
+							        <div class="mr-3 first-letter d-none d-sm-block" alt="Generic placeholder">${name}</div>
+							        <div class="media-body">
+							            <p class="mt-0">${r.nameOfUser}&nbsp;&nbsp; <i class="fas fa-star blue"></i> &nbsp;<span class="blue">${r.rating}</span></p>
+							            <p class="mt-0">${r.comment}</p>
+							            <p class="mt-0">${r.reviewDate}</p>
+							        </div>
+							       </div><hr>`;
+                    data1 += review;
+                })
+                // #page3-tabs contains the tabs- reviews & package details
+
+                let tabs = `<br><br>
+                    			<ul id="page3-tabs"class="nav nav-tabs">
+								  <li class="nav-item">
+								    <a class="nav-link active" data-toggle="tab" href="#reviews">Reviews</a>
+								  </li>
+								  <li class="nav-item">
+								    <a class="nav-link" data-toggle="tab" href="#details">Package Details</a>
+								  </li>
+								</ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane active container" id="reviews">${data1}</div>
+                        <div class="tab-pane container mt-3" id="details">
+                            <div class="col-12 my-2">
+                                <span class="d-inline-block w-50">Price </span>
+                                <span>${response.package.packagePrice} BDT</span>
+                            </div><hr>
+                            <div class="col-12 my-2">
+                                <span class="d-inline-block w-50"> BDIX Speed </span>
+                                <span>${response.package.bdixSpeed} mbps</span>
+                            </div>
+                            <hr>
+                            <div class="col-12 my-2">
+                                <span class="d-inline-block w-50">Google Speed </span>
+                                <span>${response.package.googleSpeed} mbps</span>
+                            </div>
+                            <hr>
+                            <div class="col-12 my-2">
+                                <span class="d-inline-block w-50">Normal Speed </span>
+                                <span>${response.package.normalSpeed} mbps</span>
+                            </div><hr>
+                        </div>
+                    </div>`;
+
+
+                $("#package-card-wrapper").html(output);
+
+                $("#package-card-wrapper").append(tabs);
+
+                let rating = $('.packageRating').data("rating");
+                $('.packageRating').rateYo({
+                    starWidth: "20px",
+                    normalFill: "#d8d5d5",
+                    ratedFill: "#19abd0",
+                    rating: rating,
+                    halfStar: true,
+                    readOnly: true
+                })
+            },
+        })
+    }
+
+    function rateYoSingleSelector(selector) {
+        let rating = $(selector).data('rating');
+        $(selector).rateYo({
+            numStars: 1,
+            starWidth: "30px",
+            normalFill: "#888888",
+            ratedFill: "#19abd0",
+            rating: 5,
+            halfStar: true,
+            readOnly: true,
+        })
+    }
+
+    function rateYoMultipleSelector(selector) {
+
+        $(selector).each(function (el) {
+            let rating = $(this).data("rating");
+            $(this).rateYo({
+                starWidth: "20px",
+                normalFill: "#d8d5d5",
+                ratedFill: "#19abd0",
+                rating: rating,
+                halfStar: true,
+                readOnly: true
+            })
+        })
+    }
+
+    /**
+     *
+     * invoked on
+     * @returns {string}
+     */
+    
+    $(document).ready(function () {
+        let roundRating= $('.round-rating').data('roundrating');
+        let r=roundNumber(roundRating);
+        $('.round-rating').append(r);
+        var data = {},
+            url = "baseURL/packageDetails",
+            info;
+        info = document.getElementById('page3-middle').innerHTML;
+
+        // we need to load all packages which was firstly available 
+        $('#page3-sidemenu').find('a').first().click(function(e){
+            e.preventDefault();
+            
+        // replace existing content with previously stored content
+            $('#page3-middle').html(info);
+        // rating for all packages specific to an ISP
+            rateYoMultipleSelector('.averageRating');
+        })
+        // $(document).on('click', '#packages', function (e) {
+
+        //     // replace existing content with previously stored content
+        //     $('#page3-middle').html(info);
+        //     // rating for all packages specific to an ISP
+        //     rateYoMultipleSelector('.averageRating');
+
+        // })
+        // rating for all packages specific to an ISP
+        rateYoMultipleSelector('.averageRating');
+    })
+</script>
+
+

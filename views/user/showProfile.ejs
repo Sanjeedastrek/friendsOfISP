@@ -1,0 +1,73 @@
+<!-- this is user's profile -->
+<!--router.get('/:user/profile', middlewares.checkUserLoginStatusAndDirectToLogin, userController.createProfile) // userController-->
+
+<% include ../partials/header %>
+
+ <div id="main" class="container ">
+   
+    <h4 class="text-center m-4">Current Profile</h4>
+   
+    <div class="d-flex justify-content-center">
+        <div class="form-resize">
+            <% if (customer.ispVerificationStatus==1) {%>
+            <a class="col-12 col-md-4 btn submit m-2 disabled" href="javascript:void(0)">Edit Profile</a> 
+            <%} else { %>
+             <a class="col-12 col-md-4 btn submit m-2" href="/<%=currentUser%>/createProfile">Edit Profile</a> 
+             <% } %>
+            <div class="row d-flex justify-content-center align-items-center m-2 py-2 info-bg">
+                <div class="col-6 col-md-6">Current ISP</div>
+                <% if (customer.nameOfIsp) { %>
+                    <div class="col-6 col-md-6 text-sm-right"><%=customer.nameOfIsp%></div> 
+                <%} else {%>
+                <div class="col-6 col-md-6 text-sm-right no-input">No input yet</div>
+                <% } %>
+            </div>
+            <div class="row d-flex justify-content-center align-items-center m-2 py-2 info-bg">
+                <div class="col-6 col-md-6">Current Package</div>
+                <% if (customer.package) { %>
+                    <div class="col-6 col-md-6 text-sm-right"><%=customer.package%></div> 
+                <%} else {%>
+                <div class="col-6 col-md-6 text-sm-right no-input">No input yet</div>
+                <% } %>
+            </div>
+            <div class="row d-flex justify-content-center align-items-center m-2 py-2 info-bg">
+                <div class="col-6 col-md-6">Customer ID</div>
+                <% if (customer.customerId) { %>
+                    <div class="col-6 col-md-6 text-sm-right"><%=customer.customerId%></div> 
+                <%} else {%>
+                <div class="col-6 col-md-6 text-sm-right no-input">No input yet</div>
+                <% } %>
+            </div>
+            <div class="row d-flex justify-content-center align-items-center m-2 py-2 info-bg">
+                <div class="col-6 col-md-6">Contact</div>
+                <% if (customer.phone) { %>
+                    <div class="col-6 col-md-6 text-sm-right">+88 <%=customer.phone%></div> 
+                <%} else {%>
+                <div class="col-6 col-md-6 text-sm-right no-input">No input yet</div>
+                <% } %>
+            </div>
+            <div class="row d-flex justify-content-center align-items-center m-2 py-2 info-bg">
+                <div class="col-6 col-md-6">Address</div>
+                <% if (customer.address) { %>
+                    <div class="col-6 col-md-6 text-sm-right"><%=customer.address%></div> 
+                <%} else {%>
+                <div class="col-6 col-md-6 text-sm-right no-input">No input yet</div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+ </div>
+ <!--general footer-->
+<% include ../partials/footer %>
+
+<script type="text/javascript">
+	$(function(){
+	
+
+	})
+</script>
+
+
+
+
+

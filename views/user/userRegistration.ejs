@@ -1,0 +1,92 @@
+<!-- this is customer registration form -->
+<!--router.get('/user-registration', userRegistrationController.showUserRegistrationForm)-->
+
+<% include ../partials/header %>
+
+ <div id="main" class="">
+	<!--router.post('/user-registration', middlewares.emailToLowercase, userRegistrationController.registerUserInDb);-->
+	<form method="POST" action="/user-registration" id='user-registration' class="container registration-form form-resize"autocomplete="off">
+	 	<fieldset class="p-4">
+	 		<legend class="text-center pt-4"> User Registration Form </legend>
+	 		<div class="form-group mb-5 mt-4">
+			    <label for="nameOfUser" > Your name <span class="text-danger-custom">* </span></label>
+			    <input type="text" class="form-control" name="nameOfUser" id="nameOfUser" placeholder=""required autofocus>
+			</div>
+			<div class="form-group mb-5">
+			    <label for="username"> Username <span class="text-danger-custom">* </span><span>(hint: should contain alphabets, lettes and underscores only)</span></label>
+			    <input type="text" class="form-control" name="username" id="username" 
+			     onfocusout="return isProperName()"placeholder=""required>
+			    <span id="username-message"class="message py-2 text-white"></span>
+			</div>
+			<div class="form-group mb-5">
+			    <label for="phone"> Phone (hint: should contain 11 valid numbers)</label>
+			    <div class="input-icon position-relative">
+			    	<!--<span class="country-code position-absolute">+88 </span>-->
+			    	<input type="text" value="+88" class="form-control" id="country-code" readonly>
+			    	<input type="text" class="form-control" name="phone" id="phone" onkeypress="return isNumber(event)"
+			    	minlength="11" maxlength="11"placeholder="">
+      				
+      			</div>
+      			<!-- registration-form-validation.ejs contains the validation strategy -->
+			    <span id="phone-validation-message"class=" message p-3 text-white"></span>
+      		</div>
+			
+			
+			<div class="form-group mb-5">
+			    <label for="email"> Email <span class="text-danger-custom">* </span>(hint: should contain alphabets, lettes and underscores only)</span> </label>
+			    <input type="email" class="form-control" name="email" id="email" autocomplete="off" placeholder=""required>
+			</div>
+
+			<div class="form-group mb-5">
+			    <label for="password"> Password <span class="text-danger-custom">* </span><span>(hint: should contain at least 8 characters)</span></label></label>
+			    <input type="password" class="form-control" name="password" id="password"  minlength="8" placeholder=""required>
+			    
+			</div>
+			<div class="form-group mb-5">
+			    <label for="confirmPassword"> Confirm Password </label>
+			    <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" minlength="8" placeholder="" required>
+			    <!-- registration-form-validation.ejs contains the validation strategy -->
+			    <span id="password-match-message"class=" message p-3 text-white"></span>
+			</div>
+
+			  <input type="submit" id="reg-submit" value="Register" class="col-12 col-md-4 btn submit" disabled>  
+			 
+	 	</fieldset>
+	  
+	</form>
+
+ </div>
+<!--general footer-->
+<% include ../partials/footer %>
+<!--general form validation like allow only number or pw & confirm-pw must be same etc-->
+<% include ../partials/validation/registration-form-validation %>
+
+<script>
+$(function(){
+	// when user clicks submit button, a popup appears. We've used SweetAlert2 for this purpose.
+	$('#reg-submit').click((e)=>{
+		e.preventDefault();
+		Swal.fire({
+		  title: '',
+		  text: "Are you sure to submit?",
+		  type: 'warning',
+		  showCancelButton: true,
+		  confirmButtonColor: '#19abd0',
+		  cancelButtonColor: '#d33',
+		  confirmButtonText: 'Submit'
+		}).then((result) => {
+		  if (result.value) { //if user chooses submit
+			$('#user-registration').submit(); 
+		  }
+		})
+	})
+	// control border-color of #country-code when focus/focusout event triggered on #phone
+	$('#phone').focus(function(){
+		$('#country-code').css({'border': '2px solid #80bdff','border-right':'0'});
+	})
+	$('#phone').focusout(function(){
+		$('#country-code').css({'border-color': '#e6e6e6','border-right':'0'});
+	})
+})
+</script>
+

@@ -1,0 +1,76 @@
+<!-- this is create ticket form for user -->
+
+<% include ../partials/header %>
+
+	<div id=""class="container form-resize">
+	 
+	 		<h4 class="p-2 text-center robotoBold deep-gray"><strong><%=user.nameOfIsp %></strong></h4>
+			<h4 class= "p-2 text-center robotoRegular mid-gray"><strong><%=user.package %></strong></h4>
+			<p class="p-2 font-italic text-center robotoLight" >
+				You can open a ticket only for your current package, otherwise please edit your <a href="/<%=currentUser%>/createProfile">profile</a>
+			</p>
+	
+		<div class="ticket-reply mx-auto">
+			<form method="POST" action="/<%=currentUser%>/<%=user.nameOfIsp%>/<%=user.package%>/saveTicket" class="form-resize container" id="ticket-form">
+			 	<fieldset>
+			 		<legend class="text-center">Open a ticket</legend>
+
+			 		<!-- select department from dropdown -->
+			 		<div class="dropdown mx-auto choose-dropdown">
+			 			 
+			 			
+					  <button class="btn dropdown-toggle choose-dropdown" type="button" id="departmentMenu" data-toggle="dropdown" 
+					  aria-haspopup="true" aria-expanded="false" >
+					    <span class="text-danger-custom"> * </span> Choose desired department
+					  </button><span class="text-danger-custom dropdown-mandatory"></span>
+					  <div class="dropdown-menu" aria-labelledby="departmentMenu">
+					    <a class="dropdown-item choose-dropdown" href="javascript:void(0)">Technical Dept.</a>
+					    <a class="dropdown-item choose-dropdown" href="javascript:void(0)">Fiber Dept.</a>
+					    <a class="dropdown-item choose-dropdown" href="javascript:void(0)">Billing Dept.</a>
+					  </div>
+					</div>
+					<input type="hidden" name="department" id="department" value="">
+				 	<!-- write title -->
+				 	<div class="form-group mt-4">
+						<label for="ticket-title"> Title <span>(hint: a brief title of issue)</span><span class="text-danger-custom"> *</span> </label>
+						<textarea class="form-control" id="ticket-title" name="ticketTitle" rows="2" required="required"></textarea>
+						<span class="error text-danger"></span>
+					</div>
+					
+					<!-- write problems in details -->
+					<div class="form-group mt-4">
+						<label for="description"> description <span>(hint: description)</span><span class="text-danger-custom"> *</span></label>
+						<textarea class="form-control" id="description" name="description" rows="3" required="required"></textarea>
+						<span class="error text-danger-custom"></span>
+					</div>
+					<br>
+					
+					<input type="submit" value="Submit" class="col-12 col-md-4 btn submit">  
+					<!--<input type="reset" value="Reset" class="col-12 col-md-4 btn reset">-->
+					
+					
+				</fieldset>
+			</form>
+		</div>
+		
+	</div>
+ 	
+ 
+<% include ../partials/footer %>
+<script type="text/javascript">
+	let dept=document.getElementById('department');
+	$('.dropdown-item').click(function(e){
+
+		document.getElementById('department').value=$(this).text();
+		document.getElementById('departmentMenu').innerHTML=$(this).text();
+		
+		// $('.dropdown-item').css('width','250px!important')
+	})
+	$('#ticket-form').submit(function(e){
+		if(!document.getElementById('department').value)	{
+			e.preventDefault();
+			$('.dropdown-mandatory').text("Please select department");
+		}
+	})
+
+</script>

@@ -1,0 +1,24 @@
+<!-- this is add location form for isp -->
+
+<% include ../partials/header %>
+
+ <div id="main">
+	<!--location appears in list-->
+	<form method="POST" action="/<%=nameOfIsp%>/isp/uploadLogo" style="max-width:400px"class="container form-resize"enctype="multipart/form-data">
+	   
+	 	<fieldset class="p-2">
+	 		 <div class="my-1 w-100 text-danger-custom" style="height:30px"><%= typeof msg!='undefined' ? msg :'' %></div>
+	 		<legend class="text-center p-4"> Upload logo </legend>
+		 	<div class="form-group">
+				<input type="file" name="logo" id="isp-logo" required />
+			</div>
+			<input type="submit" value="Upload" class="btn submit">
+		</fieldset>
+	</form>
+
+ </div>
+<% include ../partials/footer %>
+
+
+
+

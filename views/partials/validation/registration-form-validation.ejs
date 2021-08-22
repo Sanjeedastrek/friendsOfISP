@@ -1,0 +1,51 @@
+<!-- this script works for registration form		 -->
+<script>
+		var pw=$('#password'),
+			cpw=$('#confirmPassword'),
+			message=$('#password-match-message'),
+			submit=$('#reg-submit'), 
+			phone=$('#phone'),
+			pv=$("#phone-validation-message"),
+			plm=$('#password-length-message'),
+			username=$("#username"),
+			um=$("#username-message");
+
+
+	// ensure that password & ispConfirmPassword are exactly same
+	$('#confirmPassword').on('keyup', function () {
+		if (pw.val() === cpw.val()) 
+		  {
+		  	message.text('').removeClass('text-danger').addClass('text-success');
+		  	submit.removeAttr("disabled");
+		  }
+	  else
+	   {
+	    message.text("Password didn't match").removeClass('text-success').addClass('text-danger');
+	    submit.attr("disabled","disabled");
+	  }
+
+	});
+/////////////////////////////////////////////////////////////////
+	
+
+    ///////////////////////////////////////////////////
+    // allow alphabets & letters & underscores in username
+	function  isProperName(){
+		
+		let $regexname=/^[A-Za-z0-9]+$/,
+			illegalChars = /\W/,
+			username=document.getElementById('username').value;
+	
+		 if (illegalChars.test(username)){
+			um.text("No character's allowed except letters, numbers & underscores").removeClass('text-success').addClass('text-danger');
+			document.getElementById('username').focus();
+		 	return false;
+		 }
+		 else{
+		 	um.text('').removeClass('text-danger').addClass('text-success');
+			return true;
+		 }
+	}
+</script>
+
+

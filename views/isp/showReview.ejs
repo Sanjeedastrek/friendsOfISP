@@ -1,0 +1,49 @@
+<!-- this is create profile form for user -->
+
+<% include ../partials/header %>
+
+	<div class="main">
+	 	<div class="review">
+	 		<div class="text-info p-2">ISP: <%=isp %></div>
+			<div class="text-info p-2">Package: <%=pack %></div>
+			<div class="text-info p-2 average-review">Average review: <%=average%><span class="text-info p-2" id="avg-rating"></span>
+			</div>
+		</div>
+		<input type="hidden" id="average-setter" value="<%=average%>" name="">
+		<div class="review">
+			<h4 class="text-center">Number of reviews against package '<%=pack %>' is <%=reviewList.length %></h4>
+			<ul class="alternate-list">
+				<%reviewList.forEach(function(review){%>
+					<li>
+						<div class='p-2'>Comment :  <%=review.comment%> </div>
+						<div class='p-2'>Rating : 	<%=review.rating%> </div>
+					</li> 
+				<%})%>
+			</ul>
+		</div>
+	
+ 	
+ 
+<% include ../partials/footer %>
+
+<script type="text/javascript">
+	
+	$(function () {
+	let ms= $('.must-submit'),
+		rv= document.getElementById('ratingValue');
+
+	  $("#avg-rating").rateYo({
+		  	starWidth: "20px",
+		    normalFill: "#A0A0A0",
+		    ratedFill: "#19abd0",
+		    rating : document.getElementById('average-setter').value,
+		    halfStar : true,
+		    readOnly:true
+	  	})
+ 
+ 
+});
+</script>
+
+
+

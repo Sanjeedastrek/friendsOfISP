@@ -1,0 +1,61 @@
+<!-- edit existing package info-->
+
+<% include ../partials/header %>
+
+ <div id="main">
+	<!--router.put('/isp/:nameOfIsp/package/:packageName/edit', middlewares.checkIspLoginStatus, packageController.updatePackage)-->
+	<form method="POST" action="/isp/<%= nameOfIsp %>/package/<%= packageName %>/edit?_method=PUT" class="container form-resize">
+	 	<fieldset class="p-5 m-4">
+	 		<legend class="text-center p-4"> Edit Package </legend>
+	 		<div class="form-group">
+			    <label for="packageName"> Name of Package </label>
+			    <input type="text" class="form-control" name="package[packageName]" id="packageName" value="<%= package.packageName %>" autofocus required>
+			</div>
+			
+      		<div class="row">
+      			<div class="form-group mr-3">
+				    <label for="normalSpeed"> Normal Speed </label>
+				    <div class="input-icon-right">
+				    	<input type="number" class="form-control" name="package[normalSpeed]" id="normalSpeed" value="<%= package.normalSpeed %>" required="required"maxlength="6"oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+	      				<i class="right-align">mbps</i>
+	      			</div>
+	      			
+	      		</div>
+
+      			<div class="form-group  mr-3">
+				    <label for="bdixSpeed"> BDIX Speed </label>
+				    <div class="input-icon-right">
+				    	<input type="number" class="form-control" name="package[bdixSpeed]" id="bdixSpeed" value="<%= package.bdixSpeed %>"maxlength="6" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+	      				<i class="right-align">mbps</i>
+	      			</div>
+	      			
+	      		</div>
+	      		<div class="form-group  mr-3">
+				    <label for="googleSpeed"> Google Speed </label>
+				    <div class="input-icon-right">
+				    	<input type="number" class="form-control" name="package[googleSpeed]" id="googleSpeed" value="<%= package.googleSpeed %>"maxlength="6"oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+	      				<i class="right-align">mbps</i>
+	      			</div>
+	      		</div>
+	      	</div>
+      		<div class="form-group ">
+				    <label for="packagePrice"> Price </label>
+				    <div class="input-icon">
+				    	<input type="number" class="form-control" name="package[packagePrice]" id="packagePrice" value="<%= package.packagePrice %>" required>
+	      				<i>tk</i>
+	      			</div>
+	      			
+	      	</div>
+			
+
+			  <input type="submit" id="isp-package" value="Submit" class="col-12 col-md-4 btn submit">  
+			  <input type="reset" value="Reset" class="col-12 col-md-4 btn reset">
+	 	</fieldset>
+	  
+	</form>
+
+ </div>
+<% include ../partials/footer %>
+
+
+<!-- when user push reset button, the error or success message doesn't disappear -->
